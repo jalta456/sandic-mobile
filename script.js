@@ -624,60 +624,60 @@ window.ControleurUI = {
     },
 
     exporterPDF(filtre = 'all') {
-        const conteneur = document.getElementById('reportsContent');
-        if (!conteneur) { alert('لا يوجد تقرير لتصديره'); return; }
-
-        if (typeof html2pdf === 'undefined') {
-            // Fallback: utiliser window.print() avec style
-            const style = document.createElement('style');
-            style.textContent = '@media print { .app-nav, header, .segment-control { display:none !important; } body { background:white; } }';
-            document.head.appendChild(style);
-            window.print();
-            setTimeout(() => style.remove(), 1000);
-            return;
-        }
-
         const titres = { all: 'الكل', month: 'الشهر الحالي', year: 'السنة الحالية' };
-        const opt = {
-            margin: [15, 10, 15, 10], // top, left, bottom, right
-            filename: `تقرير-السانديك-${titres[filtre] || ''}-${new Date().toLocaleDateString('ar-MA')}.pdf`,
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true, windowWidth: 800, backgroundColor: '#ffffff' },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-
-        // On masque temporairement les boutons pour le PDF
-        const boutons = conteneur.querySelectorAll('button, .segment-control');
-        const anciensDisplays = [];
-        boutons.forEach((btn, i) => {
-            anciensDisplays[i] = btn.style.display;
-            btn.style.display = 'none';
-        });
-
-        // Ajouter un en-tête pour le PDF
-        const headerPdf = document.createElement('div');
-        headerPdf.id = 'temp-pdf-header';
-        headerPdf.innerHTML = `
-            <div style="text-align:center; padding-bottom: 20px; border-bottom: 2px solid #eaedf2; margin-bottom: 20px;">
-                <h1 style="color:#1a4fcc; display:inline-flex; align-items:center; gap:10px;"><i class="fas fa-building"></i> تقرير السانديك المالي</h1>
-                <p style="color:#64748b; margin-top:5px; font-weight:600;">الفترة المحددة: ${titres[filtre] || ''} — ${new Date().toLocaleDateString('ar-MA')}</p>
-            </div>
+        const titreDoc = `تقرير-السانديك-${titres[filtre] || ''}-${new Date().toLocaleDateString('ar-MA')}`;
+        
+        // Cacher temporairement la navigation et tout ce qui ne s'imprime pas
+        const printStyle = document.createElement('style');
+        printStyle.id = 'style-impression-pdf';
+        printStyle.textContent = `
+            @media print {
+                body { background: white !important; padding: 0 !important; margin: 0 !important; color: black !important; }
+                .app-nav, header, .segment-control, button, .modal, #pull-to-refresh { display: none !important; }
+                .main-content { padding: 0 !important; margin: 0 !important; max-width: 100% !important; border-radius: 0 !important; box-shadow: none !important; margin-bottom: 0 !important; }
+                .card { box-shadow: none !important; border: 1px solid #ddd !important; break-inside: avoid; margin-bottom: 15px !important; }
+                .bento-hero, .card[style*="linear-gradient"] { color: black !important; background: #f8fbff !important; border: 2px solid #1a4fcc !important; }
+                .bento-hero *, .card[style*="linear-gradient"] * { color: black !important; }
+                * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                @page { margin: 15mm; size: A4 portrait; }
+            }
         `;
-        conteneur.insertBefore(headerPdf, conteneur.firstChild);
+        document.head.appendChild(printStyle);
 
-        this.afficherNotification('⏳ جارٍ توليد التقرير في ملف PDF...');
+        // Ajouter l'en-tête du document
+        const reportsContainer = document.getElementById('reportsContent');
+        if (!reportsContainer) return;
+        
+        const headerDoc = document.createElement('div');
+        headerDoc.id = 'entete-impression-pdf';
+        headerDoc.style.cssText = 'text-align: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #ddd; display: none;';
+        headerDoc.innerHTML = `
+            <h1 style="color: #1a4fcc; margin-bottom: 5px; font-size: 22px;">تقرير السانديك المالي — الواحة</h1>
+            <p style="color: #7f8c8d; font-size: 14px;">الفترة: ${titres[filtre]} | تاريخ الإصدار: ${new Date().toLocaleDateString('ar-MA')}</p>
+        `;
+        reportsContainer.insertBefore(headerDoc, reportsContainer.firstChild);
 
-        html2pdf().set(opt).from(conteneur).save().then(() => {
-            // Nettoyage et restauration
-            const tempHeader = document.getElementById('temp-pdf-header');
-            if (tempHeader) tempHeader.remove();
-            
-            boutons.forEach((btn, i) => {
-                btn.style.display = anciensDisplays[i];
-            });
+        // Forcer l'affichage de l'en-tête uniquement pendant l'impression
+        const printDisplay = document.createElement('style');
+        printDisplay.textContent = '@media print { #entete-impression-pdf { display: block !important; } }';
+        document.head.appendChild(printDisplay);
 
-            this.afficherNotification('✅ تم تحميل تقرير PDF بنجاح');
-        });
+        // Lancer l'impression
+        document.title = titreDoc;
+        this.afficherNotification('⏳ تحضير التقرير، يرجى اختيار "Save as PDF"');
+        
+        setTimeout(() => {
+            window.print();
+            // Restauration
+            setTimeout(() => {
+                const head = document.getElementById('entete-impression-pdf');
+                if (head) head.remove();
+                printStyle.remove();
+                printDisplay.remove();
+                document.title = 'Sandic Mobile';
+                this.afficherNotification('✅ اكتملت العملية');
+            }, 500);
+        }, 500);
     },
 
     // ===== RECHERCHE =====
