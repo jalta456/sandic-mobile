@@ -480,6 +480,76 @@ window.ControleurUI = {
         Ecrans.rapports(periode);
     },
 
+    // ===== PROJETS - DÉTAIL CONTRIBUTIONS =====
+    ouvrirDetailProjet(idProjet) {
+        const projet = DonneesApp.projets.find(p => p.id === idProjet);
+        if (!projet) return;
+        // Supprimer un modal existant
+        const existing = document.getElementById('modalProjet');
+        if (existing) existing.remove();
+        document.body.insertAdjacentHTML('beforeend', ComposantsUI.modalDetailProjet(projet));
+        // Animation d'entrée
+        requestAnimationFrame(() => {
+            const modal = document.getElementById('modalProjet');
+            if (modal) { modal.style.opacity = '0'; requestAnimationFrame(() => { modal.style.transition = 'opacity 0.2s'; modal.style.opacity = '1'; }); }
+        });
+    },
+
+    fermerModalProjet() {
+        const modal = document.getElementById('modalProjet');
+        if (modal) { modal.style.opacity = '0'; setTimeout(() => modal.remove(), 200); }
+    },
+
+    enregistrerContribProjet(idProjet, idProprietaire) {
+        const projet = DonneesApp.projets.find(p => p.id === idProjet);
+        const prop = DonneesApp.proprietaires.find(o => o.id === idProprietaire);
+        if (!projet || !prop) return;
+
+        const montant = projet.part || 0;
+        const dateAujourdhui = new Date().toLocaleDateString('fr-FR', { day:'2-digit', month:'2-digit', year:'numeric' });
+
+        if (!projet.contributions) projet.contributions = [];
+        // Éviter les doublons
+        if (projet.contributions.some(c => c.idProprietaire === idProprietaire)) {
+            this.afficherNotification('⚠️ هذا المالك سبق أن دفع مساهمته');
+            return;
+        }
+
+        projet.contributions.push({ idProprietaire, montant, date: dateAujourdhui, statut: 'payé' });
+        projet.collecte = (projet.collecte || 0) + montant;
+
+        this.sauvegarderDonnees();
+        this.afficherNotification(`✅ تم تسجيل مساهمة ${prop.nom} (${montant} DH)`);
+        // Rafraîchir le modal
+        this.ouvrirDetailProjet(idProjet);
+    },
+
+    envoyerRapportProjetWhatsApp(idProjet) {
+        const projet = DonneesApp.projets.find(p => p.id === idProjet);
+        if (!projet) return;
+
+        const contributions = projet.contributions || [];
+        const payés = DonneesApp.proprietaires.filter(o => contributions.some(c => c.idProprietaire === o.id));
+        const nonPayés = DonneesApp.proprietaires.filter(o => !contributions.some(c => c.idProprietaire === o.id));
+        const pct = Math.min(100, Math.round((projet.collecte / projet.budget) * 100));
+        const date = new Date().toLocaleDateString('ar-MA', { day:'numeric', month:'long', year:'numeric' });
+
+        let msg = `🏗️ *تقرير مشروع: ${projet.titre}*\n`;
+        msg += `📅 ${date}\n${'─'.repeat(28)}\n\n`;
+        msg += `📊 *نسبة الإنجاز: ${pct}%*\n`;
+        msg += `• الميزانية الكلية: ${(projet.budget||0).toLocaleString()} DH\n`;
+        msg += `• المبلغ المحصّل: ${(projet.collecte||0).toLocaleString()} DH\n`;
+        msg += `• المبلغ المتبقي: ${Math.max(0,projet.budget-projet.collecte).toLocaleString()} DH\n\n`;
+        msg += `✅ *دفعوا (${payés.length}):* ${payés.map(o=>`ش.${o.appartement} ${o.nom.split(' ')[0]}`).join('، ')}\n\n`;
+        if (nonPayés.length > 0) {
+            msg += `⚠️ *لم يدفعوا بعد (${nonPayés.length}):*\n`;
+            nonPayés.forEach(o => { msg += `  - ${o.nom} (شقة ${o.appartement}) — ${projet.part||0} DH\n`; });
+        }
+        msg += `\n_مجمع السانديك — نظام الإدارة الإلكترونية_ 🏢`;
+
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    },
+
     envoyerRapportWhatsApp(filtre = 'all') {
         const moisArabes = ["يناير","فبراير","مارس","أبريل","ماي","يونيو","يوليوز","غشت","شتنبر","أكتوبر","نونبر","دجنبر"];
         const anneeActuelle = new Date().getFullYear().toString();

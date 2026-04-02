@@ -85,8 +85,25 @@ window.DonneesApp = {
         { id: 2, titre: "بدء أشغال الصباغة", priorite: "medium", contenu: "ستبدأ أشغال صباغة المداخل الإثنين القادم", date: "20 أكتوبر" }
     ],
     projets: [
-        { id: 1, titre: "إصلاح الواجهة الكبرى", budget: 35000, collecte: 21000, progression: 60, dateDebut: "01/09/2023", part: 500, description: "صباغة وترميم الواجهة الرئيسية" },
-        { id: 2, titre: "تركيب كاميرات المراقبة", budget: 8500, collecte: 8500, progression: 100, dateDebut: "15/08/2023", part: 200, description: "تركيب 8 كاميرات عالية الجودة" }
+        {
+            id: 1, titre: "إصلاح الواجهة الكبرى", budget: 35000, collecte: 21000,
+            progression: 60, dateDebut: "01/09/2023", part: 500,
+            description: "صباغة وترميم الواجهة الرئيسية",
+            contributions: [
+                { idProprietaire: 1, montant: 500, date: "05/09/2023", statut: "payé" },
+                { idProprietaire: 2, montant: 500, date: "08/09/2023", statut: "payé" }
+            ]
+        },
+        {
+            id: 2, titre: "تركيب كاميرات المراقبة", budget: 8500, collecte: 8500,
+            progression: 100, dateDebut: "15/08/2023", part: 200,
+            description: "تركيب 8 كاميرات عالية الجودة",
+            contributions: [
+                { idProprietaire: 1, montant: 200, date: "20/08/2023", statut: "payé" },
+                { idProprietaire: 2, montant: 200, date: "22/08/2023", statut: "payé" },
+                { idProprietaire: 3, montant: 200, date: "25/08/2023", statut: "payé" }
+            ]
+        }
     ],
     transactionsFonds: [
         { 

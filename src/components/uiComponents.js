@@ -78,24 +78,128 @@ window.ComposantsUI = {
 
     carteProjet(p) {
         const pourcentage = Math.min(100, Math.round((p.collecte / p.budget) * 100)) || p.progression || 0;
+        const contributions = p.contributions || [];
+        const nbProp = DonneesApp.proprietaires.length;
+        const nbPayes = contributions.length;
+        const couleurBarre = pourcentage >= 100 ? '#2ecc71' : pourcentage >= 50 ? 'var(--primary)' : '#e67e22';
         return `
-            <div class="card" tabindex="0">
+            <div class="card" tabindex="0" style="cursor:pointer" onclick="ControleurUI.ouvrirDetailProjet(${p.id})">
                 <div style="display:flex;justify-content:space-between;align-items:flex-start">
                     <div style="flex:1">
                         <p class="title-lg" style="font-size:1.05rem">${p.titre}</p>
-                        <p class="body-md" style="margin:0.25rem 0">${p.description || ''}</p>
+                        <p class="body-md" style="margin:0.25rem 0;font-size:0.8rem">${p.description || ''}</p>
                     </div>
                     <span class="badge ${pourcentage >= 100 ? 'badge-paid' : 'badge-pending'}">${pourcentage}%</span>
                 </div>
-                <div style="height: 8px; background: var(--surface-container-low); border-radius: 4px; margin: 1rem 0; overflow: hidden">
-                    <div style="width: ${pourcentage}%; height: 100%; background: var(--primary); transition: width 0.5s ease"></div>
+                <div style="height:8px;background:var(--surface-container-low);border-radius:4px;margin:0.75rem 0;overflow:hidden">
+                    <div style="width:${pourcentage}%;height:100%;background:${couleurBarre};transition:width 0.5s ease;border-radius:4px"></div>
                 </div>
-                <div style="display:flex;justify-content:space-between">
-                    <p class="body-md">الميزانية: <b>${(p.budget||0).toLocaleString()} DH</b></p>
-                    <p class="body-md">المجمع: <b style="color:var(--primary)">${(p.collecte||0).toLocaleString()} DH</b></p>
+                <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem">
+                    <p class="body-md" style="font-size:0.8rem">الميزانية: <b>${(p.budget||0).toLocaleString()} DH</b></p>
+                    <p class="body-md" style="font-size:0.8rem">المجمع: <b style="color:${couleurBarre}">${(p.collecte||0).toLocaleString()} DH</b></p>
                 </div>
-                ${p.part ? `<p class="body-md" style="margin-top:0.5rem;font-size:0.75rem;opacity:0.7">المساهمة/شقة: ${p.part} DH</p>` : ''}
+                <div style="display:flex;justify-content:space-between;align-items:center;padding-top:0.5rem;border-top:1px solid var(--outline-variant)">
+                    <div style="display:flex;align-items:center;gap:0.4rem">
+                        <div style="display:flex;gap:2px">
+                            ${Array.from({length: nbProp}, (_,i) => {
+                                const prop = DonneesApp.proprietaires[i];
+                                const payé = prop && contributions.some(c => c.idProprietaire === prop.id);
+                                return `<div style="width:8px;height:8px;border-radius:50%;background:${payé?'#2ecc71':'#e74c3c11'};border:1px solid ${payé?'#2ecc71':'#e74c3c'}"></div>`;
+                            }).join('')}
+                        </div>
+                        <p style="font-size:0.72rem;color:${nbPayes===nbProp?'#2ecc71':'#e67e22'}">
+                            ${nbPayes}/${nbProp} شقة دفعت
+                        </p>
+                    </div>
+                    <span style="font-size:0.75rem;color:var(--primary);font-weight:600">
+                        <i class="fas fa-eye"></i> التفاصيل
+                    </span>
+                </div>
+                ${p.part ? `<p class="body-md" style="margin-top:0.4rem;font-size:0.72rem;opacity:0.6">المساهمة/شقة: <b>${p.part} DH</b></p>` : ''}
             </div>`;
+    },
+
+    modalDetailProjet(p) {
+        const contributions = p.contributions || [];
+        const pourcentage = Math.min(100, Math.round((p.collecte / p.budget) * 100)) || p.progression || 0;
+        const nbProp = DonneesApp.proprietaires.length;
+        const nbPayes = contributions.length;
+        const totalCollecte = contributions.reduce((s,c) => s+(c.montant||0), 0);
+        const couleurBarre = pourcentage >= 100 ? '#2ecc71' : pourcentage >= 50 ? 'var(--primary)' : '#e67e22';
+
+        const lignesProp = DonneesApp.proprietaires.map(o => {
+            const contrib = contributions.find(c => c.idProprietaire === o.id);
+            return `
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem 0;border-bottom:1px solid var(--outline-variant)">
+                <div style="display:flex;align-items:center;gap:0.6rem">
+                    <div style="width:36px;height:36px;border-radius:50%;background:${contrib?'#2ecc7122':'#e74c3c11'};color:${contrib?'#2ecc71':'#e74c3c'};display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0">
+                        <i class="fas ${contrib?'fa-check':'fa-times'}"></i>
+                    </div>
+                    <div>
+                        <p style="font-size:0.88rem;font-weight:600">${o.nom}</p>
+                        <p style="font-size:0.72rem;opacity:0.6">شقة ${o.appartement}</p>
+                    </div>
+                </div>
+                <div style="text-align:left">
+                    ${contrib
+                        ? `<p style="color:#2ecc71;font-weight:700;font-size:0.85rem">+${contrib.montant} DH</p>
+                           <p style="font-size:0.65rem;opacity:0.6">${contrib.date}</p>`
+                        : `<button onclick="ControleurUI.enregistrerContribProjet(${p.id},${o.id})"
+                              style="background:#e67e2222;color:#e67e22;border:1px solid #e67e2244;border-radius:8px;padding:0.3rem 0.6rem;font-size:0.72rem;cursor:pointer;font-family:inherit">
+                              <i class="fas fa-plus"></i> تسجيل
+                           </button>`
+                    }
+                </div>
+            </div>`;
+        }).join('');
+
+        return `
+        <div id="modalProjet" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:flex-end" onclick="if(event.target===this)ControleurUI.fermerModalProjet()">
+            <div style="background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-height:85vh;overflow-y:auto;padding:1.2rem;font-family:Cairo,sans-serif" dir="rtl">
+                <!-- مقبض السحب -->
+                <div style="width:40px;height:4px;background:var(--outline-variant);border-radius:2px;margin:0 auto 1rem"></div>
+
+                <!-- رأس المشروع -->
+                <div style="margin-bottom:1rem">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem">
+                        <div>
+                            <p style="font-size:1.1rem;font-weight:700">${p.titre}</p>
+                            <p style="font-size:0.8rem;opacity:0.7">${p.description}</p>
+                        </div>
+                        <button onclick="ControleurUI.fermerModalProjet()" style="background:var(--surface-container);border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1rem;color:var(--on-surface)">✕</button>
+                    </div>
+                    <!-- شريط التقدم -->
+                    <div style="height:10px;background:var(--surface-container);border-radius:5px;overflow:hidden;margin:0.75rem 0">
+                        <div style="height:100%;width:${pourcentage}%;background:linear-gradient(90deg,${couleurBarre},${couleurBarre}cc);border-radius:5px;transition:width 0.5s"></div>
+                    </div>
+                    <!-- إحصاء سريع -->
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.5rem;margin-bottom:0.75rem">
+                        <div style="background:var(--surface-container);border-radius:10px;padding:0.6rem;text-align:center">
+                            <p style="font-size:0.65rem;opacity:0.7">الميزانية</p>
+                            <p style="font-size:0.85rem;font-weight:700">${(p.budget||0).toLocaleString()}<span style="font-size:0.6rem"> DH</span></p>
+                        </div>
+                        <div style="background:#2ecc7122;border-radius:10px;padding:0.6rem;text-align:center">
+                            <p style="font-size:0.65rem;opacity:0.7">المحصّل</p>
+                            <p style="font-size:0.85rem;font-weight:700;color:#2ecc71">${totalCollecte.toLocaleString()}<span style="font-size:0.6rem"> DH</span></p>
+                        </div>
+                        <div style="background:${nbPayes===nbProp?'#2ecc7122':'#e74c3c11'};border-radius:10px;padding:0.6rem;text-align:center">
+                            <p style="font-size:0.65rem;opacity:0.7">الشقق</p>
+                            <p style="font-size:0.85rem;font-weight:700;color:${nbPayes===nbProp?'#2ecc71':'#e74c3c'}">${nbPayes}/${nbProp}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- قائمة الملاك -->
+                <p style="font-size:0.85rem;font-weight:700;margin-bottom:0.5rem;opacity:0.8">📋 حالة مساهمة الملاك</p>
+                <div>${lignesProp}</div>
+
+                <!-- زر WhatsApp -->
+                <button onclick="ControleurUI.envoyerRapportProjetWhatsApp(${p.id})"
+                    style="width:100%;margin-top:1rem;background:#25D366;color:white;border:none;border-radius:12px;padding:0.9rem;font-size:0.9rem;cursor:pointer;font-family:Cairo,sans-serif;display:flex;align-items:center;justify-content:center;gap:0.5rem">
+                    <i class="fab fa-whatsapp"></i> تذكير المتأخرين عبر WhatsApp
+                </button>
+            </div>
+        </div>`;
     },
 
     carteAnnonce(a) {
