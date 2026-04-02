@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ar"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>سنديك لوت يسرى - إدارة المصاريف</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-primary": "#adc6ff",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed-variant": "#004493",
+              "primary-fixed": "#d8e2ff",
+              "surface-bright": "#f8f9fa",
+              "surface-container": "#edeeef",
+              "on-secondary-container": "#2d4c83",
+              "on-secondary": "#ffffff",
+              "on-tertiary-fixed-variant": "#7c2e00",
+              "on-surface-variant": "#414755",
+              "error-container": "#ffdad6",
+              "inverse-surface": "#2e3132",
+              "on-surface": "#191c1d",
+              "surface-dim": "#d9dadb",
+              "on-secondary-fixed-variant": "#26467d",
+              "surface-container-highest": "#e1e3e4",
+              "surface-tint": "#005bc1",
+              "surface": "#f8f9fa",
+              "on-tertiary-fixed": "#351000",
+              "tertiary-fixed": "#ffdbcc",
+              "on-tertiary": "#ffffff",
+              "tertiary-fixed-dim": "#ffb595",
+              "secondary-fixed": "#d8e2ff",
+              "on-primary-fixed": "#001a41",
+              "on-primary": "#ffffff",
+              "on-error-container": "#93000a",
+              "on-tertiary-container": "#fffbff",
+              "on-secondary-fixed": "#001a41",
+              "secondary-container": "#a1befd",
+              "primary-fixed-dim": "#adc6ff",
+              "primary-container": "#0070eb",
+              "outline": "#717786",
+              "surface-container-low": "#f3f4f5",
+              "tertiary-container": "#c64f00",
+              "background": "#f8f9fa",
+              "on-primary-container": "#fefcff",
+              "tertiary": "#9e3d00",
+              "surface-container-high": "#e7e8e9",
+              "on-background": "#191c1d",
+              "surface-variant": "#e1e3e4",
+              "error": "#ba1a1a",
+              "secondary-fixed-dim": "#adc6ff",
+              "secondary": "#405e96",
+              "outline-variant": "#c1c6d7",
+              "inverse-on-surface": "#f0f1f2",
+              "primary": "#0058bc",
+              "on-error": "#ffffff"
+            },
+            fontFamily: {
+              "Cairo": ["Cairo", "sans-serif"],
+              "headline": ["Cairo"],
+              "body": ["Cairo"],
+              "label": ["Cairo"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Cairo', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="bg-surface-container-high fixed top-0 left-0 right-0 z-50 flex flex-row-reverse justify-between items-center w-full px-6 py-4">
+<div class="flex items-center gap-3 flex-row-reverse">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container overflow-hidden">
+<img alt="User" data-alt="professional portrait of a middle-aged property manager in a clean modern office setting with soft natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAH6YqHSSF3Ch0t470DDphpkJspk0AxHO1Osxxeeko3_JNnRKtjeHgZ4N5v5Ibvc5LnIUUN2ptylES8CHd8v09Ni0qpUsNCv2aJmgC3UD8EXd7CSkquEohdziqgejBWhT5ebaPfvP5nCKgVeWXcrFApzOk389rIHy8m7fG9vvlf9qlFxPGmipqZ6T7rgQCsfu3FOj5oWGpIyaJ1j6kuEbUrjvBg7Jqe16KlHUz5-302GrYkqOtkK_tKo7FLeLIuQIlXaLKXvdgoGZk"/>
+</div>
+<h1 class="font-Cairo text-xl font-bold text-[#0058bc] dark:text-[#0070eb]">سنديك لوت يسرى</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#e7e8e9] transition-colors active:scale-95 text-[#414755]">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+</button>
+</header>
+<main class="pt-24 px-6 max-w-2xl mx-auto">
+<!-- Header Section -->
+<section class="mb-8">
+<h2 class="text-3xl font-extrabold text-primary mb-2">إدارة المصاريف</h2>
+<p class="text-on-surface-variant text-sm">تتبع وتدقيق جميع التكاليف التشغيلية للمجمع السكني</p>
+</section>
+<!-- Stats Overview (Asymmetric Tonal Layout) -->
+<section class="grid grid-cols-12 gap-4 mb-10">
+<div class="col-span-7 bg-primary-container p-6 rounded-lg text-on-primary-container flex flex-col justify-between shadow-lg shadow-primary/10">
+<span class="text-xs font-medium opacity-80">إجمالي مصاريف الشهر</span>
+<div class="mt-4">
+<span class="text-3xl font-bold">12,450.00</span>
+<span class="text-sm mr-1">درهم</span>
+</div>
+</div>
+<div class="col-span-5 bg-surface-container-lowest p-6 rounded-lg flex flex-col justify-between">
+<span class="text-xs font-medium text-on-surface-variant">فواتير معلقة</span>
+<div class="mt-4 flex items-baseline gap-1">
+<span class="text-2xl font-bold text-tertiary">04</span>
+<span class="material-symbols-outlined text-tertiary text-lg" data-icon="priority_high">priority_high</span>
+</div>
+</div>
+</section>
+<!-- Filters Section -->
+<section class="mb-6">
+<div class="flex flex-col gap-4">
+<!-- Filter Tabs -->
+<div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap">الكل</button>
+<button class="bg-surface-container-high text-on-surface-variant px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap hover:bg-surface-dim transition-colors">الصيانة</button>
+<button class="bg-surface-container-high text-on-surface-variant px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap hover:bg-surface-dim transition-colors">الكهرباء</button>
+<button class="bg-surface-container-high text-on-surface-variant px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap hover:bg-surface-dim transition-colors">الأمن</button>
+<button class="bg-surface-container-high text-on-surface-variant px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap hover:bg-surface-dim transition-colors">أخرى</button>
+</div>
+<!-- Status Dropdown Simulation -->
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2 bg-surface-container-low px-4 py-2 rounded-lg text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+<span>الحالة: الكل</span>
+</div>
+<span class="text-xs text-on-surface-variant font-medium">إظهار 24 نتيجة</span>
+</div>
+</div>
+</section>
+<!-- Expense List -->
+<section class="space-y-4">
+<!-- Expense Item 1 -->
+<div class="bg-surface-container-lowest p-5 rounded-md flex items-center justify-between group hover:shadow-md transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="plumbing">plumbing</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">إصلاح مصعد المبنى A</h4>
+<div class="flex items-center gap-2 text-xs text-on-surface-variant mt-1">
+<span>14 مايو 2024</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span>صيانة دورية</span>
+</div>
+</div>
+</div>
+<div class="text-left">
+<div class="font-bold text-lg text-on-surface">1,200.00</div>
+<span class="text-[10px] px-2 py-0.5 rounded-full bg-green-100 text-green-700 font-bold">مدفوع</span>
+</div>
+</div>
+<!-- Expense Item 2 -->
+<div class="bg-surface-container-lowest p-5 rounded-md flex items-center justify-between group hover:shadow-md transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="bolt">bolt</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">فاتورة كهرباء المناطق المشتركة</h4>
+<div class="flex items-center gap-2 text-xs text-on-surface-variant mt-1">
+<span>12 مايو 2024</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span>مرافق</span>
+</div>
+</div>
+</div>
+<div class="text-left">
+<div class="font-bold text-lg text-on-surface">4,850.00</div>
+<span class="text-[10px] px-2 py-0.5 rounded-full bg-tertiary/10 text-tertiary font-bold">قيد الانتظار</span>
+</div>
+</div>
+<!-- Expense Item 3 -->
+<div class="bg-surface-container-lowest p-5 rounded-md flex items-center justify-between group hover:shadow-md transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="security">security</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">خدمات الحراسة والأمن</h4>
+<div class="flex items-center gap-2 text-xs text-on-surface-variant mt-1">
+<span>10 مايو 2024</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span>عقود سنوية</span>
+</div>
+</div>
+</div>
+<div class="text-left">
+<div class="font-bold text-lg text-on-surface">3,000.00</div>
+<span class="text-[10px] px-2 py-0.5 rounded-full bg-green-100 text-green-700 font-bold">مدفوع</span>
+</div>
+</div>
+<!-- Expense Item 4 -->
+<div class="bg-surface-container-lowest p-5 rounded-md flex items-center justify-between group hover:shadow-md transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="cleaning_services">cleaning_services</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">مواد تنظيف المداخل</h4>
+<div class="flex items-center gap-2 text-xs text-on-surface-variant mt-1">
+<span>08 مايو 2024</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span>نظافة</span>
+</div>
+</div>
+</div>
+<div class="text-left">
+<div class="font-bold text-lg text-on-surface">450.00</div>
+<span class="text-[10px] px-2 py-0.5 rounded-full bg-green-100 text-green-700 font-bold">مدفوع</span>
+</div>
+</div>
+</section>
+<!-- Empty state or end of list message -->
+<p class="text-center text-on-surface-variant text-xs mt-10 opacity-50">لا يوجد المزيد من المصاريف لهذا الشهر</p>
+</main>
+<!-- FAB: Add Expense (Balanced to the left for RTL flow) -->
+<button class="fixed bottom-24 left-6 w-14 h-14 bg-gradient-to-br from-primary to-primary-container text-white rounded-lg shadow-xl flex items-center justify-center active:scale-90 transition-transform z-40">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex flex-row-reverse justify-around items-center px-4 pb-6 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl">
+<div class="fixed bottom-4 left-4 right-4 rounded-3xl overflow-hidden shadow-2xl shadow-black/5 flex flex-row-reverse justify-around items-center bg-white/90 backdrop-blur-lg px-2 py-3">
+<a class="flex flex-col items-center justify-center text-[#414755] px-4 py-2 hover:bg-gray-100 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-Cairo text-xs font-medium">الرئيسية</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#414755] px-4 py-2 hover:bg-gray-100 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-Cairo text-xs font-medium">الملاك</span>
+</a>
+<!-- Active Tab: المصاريف -->
+<a class="flex flex-col items-center justify-center bg-[#0070eb]/10 text-[#0058bc] rounded-2xl px-4 py-2 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="payments" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="font-Cairo text-xs font-medium">المصاريف</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#414755] px-4 py-2 hover:bg-gray-100 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-Cairo text-xs font-medium">الأداءات</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#414755] px-4 py-2 hover:bg-gray-100 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+<span class="font-Cairo text-xs font-medium">المزيد</span>
+</a>
+</div>
+</nav>
+</body></html>

@@ -1,0 +1,6 @@
+node_modules/
+.env
+*.log
+bundler.js
+sandic-mobile-bundle.html
+phase5-updated.html

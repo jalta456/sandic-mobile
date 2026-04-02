@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ar"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>إدارة الملاك - سنديك لوت يسرى</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-primary": "#adc6ff",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed-variant": "#004493",
+              "primary-fixed": "#d8e2ff",
+              "surface-bright": "#f8f9fa",
+              "surface-container": "#edeeef",
+              "on-secondary-container": "#2d4c83",
+              "on-secondary": "#ffffff",
+              "on-tertiary-fixed-variant": "#7c2e00",
+              "on-surface-variant": "#414755",
+              "error-container": "#ffdad6",
+              "inverse-surface": "#2e3132",
+              "on-surface": "#191c1d",
+              "surface-dim": "#d9dadb",
+              "on-secondary-fixed-variant": "#26467d",
+              "surface-container-highest": "#e1e3e4",
+              "surface-tint": "#005bc1",
+              "surface": "#f8f9fa",
+              "on-tertiary-fixed": "#351000",
+              "tertiary-fixed": "#ffdbcc",
+              "on-tertiary": "#ffffff",
+              "tertiary-fixed-dim": "#ffb595",
+              "secondary-fixed": "#d8e2ff",
+              "on-primary-fixed": "#001a41",
+              "on-primary": "#ffffff",
+              "on-error-container": "#93000a",
+              "on-tertiary-container": "#fffbff",
+              "on-secondary-fixed": "#001a41",
+              "secondary-container": "#a1befd",
+              "primary-fixed-dim": "#adc6ff",
+              "primary-container": "#0070eb",
+              "outline": "#717786",
+              "surface-container-low": "#f3f4f5",
+              "tertiary-container": "#c64f00",
+              "background": "#f8f9fa",
+              "on-primary-container": "#fefcff",
+              "tertiary": "#9e3d00",
+              "surface-container-high": "#e7e8e9",
+              "on-background": "#191c1d",
+              "surface-variant": "#e1e3e4",
+              "error": "#ba1a1a",
+              "secondary-fixed-dim": "#adc6ff",
+              "secondary": "#405e96",
+              "outline-variant": "#c1c6d7",
+              "inverse-on-surface": "#f0f1f2",
+              "primary": "#0058bc",
+              "on-error": "#ffffff"
+            },
+            fontFamily: {
+              "Cairo": ["Cairo", "sans-serif"],
+              "headline": ["Cairo", "sans-serif"],
+              "body": ["Cairo", "sans-serif"],
+              "label": ["Cairo", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Cairo', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="bg-surface-container-high docked full-width top-0 z-40">
+<div class="flex flex-row-reverse justify-between items-center w-full px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="professional headshot of a middle-aged man with a friendly expression in a corporate setting with soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlQ4bDLCd37jZawpyABaVXA2jXFRNIC6mm5eUnuaQ3hVR1N-H3P20CSwNcWT0DIMkz2_TXUNrVoq1MJ77bpDB4b7-Jz643zFjV0RZi_pdbEB1QwiKeLvs0Y4AioMcnMQKxHnU15zyy1g-dMoN8HsRr8yYpcPCVIimhlfUc85L7qKzbuaBGhZkzyf6oMt-gCj4dNWNnN6s-C9zcUq7v2NoezpfSIvXA4a7g_gvHY0NsDCCANroCKhVmhWy4dD1QYADtP4lGeTSzs9c"/>
+</div>
+<h1 class="font-Cairo text-xl font-bold text-[#0058bc] dark:text-[#0070eb]">سنديك لوت يسرى</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#e7e8e9] transition-colors scale-95 active:opacity-80">
+<span class="material-symbols-outlined text-[#414755]">logout</span>
+</button>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-6 pt-8">
+<!-- Page Title & Stats -->
+<div class="mb-8">
+<h2 class="text-3xl font-extrabold text-on-surface mb-2">قائمة الملاك</h2>
+<p class="text-on-surface-variant">إدارة وتتبع بيانات ملاك الشقق في المجمع السكني</p>
+</div>
+<!-- Search & Filter Bar -->
+<div class="mb-10 sticky top-20 z-30">
+<div class="bg-surface-container-low rounded-lg p-2 flex items-center gap-3 shadow-sm">
+<div class="flex-1 flex items-center bg-surface-container-lowest rounded-md px-4 py-2">
+<span class="material-symbols-outlined text-outline ml-3">search</span>
+<input class="bg-transparent border-none focus:ring-0 w-full text-on-surface text-sm" placeholder="البحث عن مالك، رقم الشقة..." type="text"/>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2.5 rounded-md font-bold flex items-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+<span>تصفية</span>
+</button>
+</div>
+</div>
+<!-- Owners Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Owner Card 1 -->
+<div class="bg-surface-container-lowest rounded-lg p-6 shadow-black/5 flex flex-col justify-between group">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-full bg-secondary-container/30 flex items-center justify-center text-primary font-bold text-xl">
+                            أ.م
+                        </div>
+<div>
+<h3 class="font-bold text-lg text-on-surface">أحمد منصور</h3>
+<div class="flex items-center gap-1 text-on-surface-variant text-sm">
+<span class="material-symbols-outlined text-xs">apartment</span>
+<span>شقة رقم 12 - الطابق الرابع</span>
+</div>
+</div>
+</div>
+<span class="bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">نشط</span>
+</div>
+<div class="space-y-2 mb-6">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg">call</span>
+<span dir="ltr">+212 600-000000</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg">mail</span>
+<span>ahmed.m@example.com</span>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-4 border-t border-surface-container-high">
+<button class="flex-1 flex items-center justify-center gap-2 py-2 rounded-md hover:bg-surface-container-high transition-colors text-primary font-medium">
+<span class="material-symbols-outlined text-sm">edit</span>
+                        تعديل
+                    </button>
+<button class="flex-1 flex items-center justify-center gap-2 py-2 rounded-md hover:bg-error-container/20 transition-colors text-error font-medium">
+<span class="material-symbols-outlined text-sm">delete</span>
+                        حذف
+                    </button>
+</div>
+</div>
+<!-- Owner Card 2 -->
+<div class="bg-surface-container-lowest rounded-lg p-6 shadow-black/5 flex flex-col justify-between group">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-full bg-secondary-container/30 flex items-center justify-center text-primary font-bold text-xl">
+                            س.ع
+                        </div>
+<div>
+<h3 class="font-bold text-lg text-on-surface">سارة العلمي</h3>
+<div class="flex items-center gap-1 text-on-surface-variant text-sm">
+<span class="material-symbols-outlined text-xs">apartment</span>
+<span>شقة رقم 05 - الطابق الأول</span>
+</div>
+</div>
+</div>
+<span class="bg-tertiary/10 text-tertiary text-xs font-bold px-3 py-1 rounded-full">متأخر</span>
+</div>
+<div class="space-y-2 mb-6">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg">call</span>
+<span dir="ltr">+212 611-111111</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg">mail</span>
+<span>sara.al@example.com</span>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-4 border-t border-surface-container-high">
+<button class="flex-1 flex items-center justify-center gap-2 py-2 rounded-md hover:bg-surface-container-high transition-colors text-primary font-medium">
+<span class="material-symbols-outlined text-sm">edit</span>
+                        تعديل
+                    </button>
+<button class="flex-1 flex items-center justify-center gap-2 py-2 rounded-md hover:bg-error-container/20 transition-colors text-error font-medium">
+<span class="material-symbols-outlined text-sm">delete</span>
+                        حذف
+                    </button>
+</div>
+</div>
+<!-- Owner Card 3 -->
+<div class="bg-surface-container-lowest rounded-lg p-6 shadow-black/5 flex flex-col justify-between group">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-full bg-secondary-container/30 flex items-center justify-center text-primary font-bold text-xl">
+                            ك.ب
+                        </div>
+<div>
+<h3 class="font-bold text-lg text-on-surface">كريم بناني</h3>
+<div class="flex items-center gap-1 text-on-surface-variant text-sm">
+<span class="material-symbols-outlined text-xs">apartment</span>
+<span>شقة رقم 28 - الطابق السابع</span>
+</div>
+</div>
+</div>
+<span class="bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">نشط</span>
+</div>
+<div class="space-y-2 mb-6">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg">call</span>
+<span dir="ltr">+212 622-222222</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg">mail</span>
+<span>k.bennani@example.com</span>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-4 border-t border-surface-container-high">
+<button class="flex-1 flex items-center justify-center gap-2 py-2 rounded-md hover:bg-surface-container-high transition-colors text-primary font-medium">
+<span class="material-symbols-outlined text-sm">edit</span>
+                        تعديل
+                    </button>
+<button class="flex-1 flex items-center justify-center gap-2 py-2 rounded-md hover:bg-error-container/20 transition-colors text-error font-medium">
+<span class="material-symbols-outlined text-sm">delete</span>
+                        حذف
+                    </button>
+</div>
+</div>
+<!-- Owner Card 4 -->
+<div class="bg-surface-container-lowest rounded-lg p-6 shadow-black/5 flex flex-col justify-between group">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-full bg-secondary-container/30 flex items-center justify-center text-primary font-bold text-xl">
+                            ن.ف
+                        </div>
+<div>
+<h3 class="font-bold text-lg text-on-surface">نورة فوزي</h3>
+<div class="flex items-center gap-1 text-on-surface-variant text-sm">
+<span class="material-symbols-outlined text-xs">apartment</span>
+<span>شقة رقم 15 - الطابق الثالث</span>
+</div>
+</div>
+</div>
+<span class="bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">نشط</span>
+</div>
+<div class="space-y-2 mb-6">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg">call</span>
+<span dir="ltr">+212 633-333333</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg">mail</span>
+<span>noura.f@example.com</span>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-4 border-t border-surface-container-high">
+<button class="flex-1 flex items-center justify-center gap-2 py-2 rounded-md hover:bg-surface-container-high transition-colors text-primary font-medium">
+<span class="material-symbols-outlined text-sm">edit</span>
+                        تعديل
+                    </button>
+<button class="flex-1 flex items-center justify-center gap-2 py-2 rounded-md hover:bg-error-container/20 transition-colors text-error font-medium">
+<span class="material-symbols-outlined text-sm">delete</span>
+                        حذف
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB -->
+<button class="fixed bottom-24 left-8 z-50 bg-gradient-to-br from-[#0058bc] to-[#0070eb] text-white w-14 h-14 rounded-lg shadow-xl shadow-primary/20 flex items-center justify-center hover:scale-105 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex flex-row-reverse justify-around items-center px-4 pb-6 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl">
+<div class="fixed bottom-4 left-4 right-4 rounded-3xl overflow-hidden shadow-2xl shadow-black/5 flex flex-row-reverse justify-around items-center bg-white/90 p-2">
+<a class="flex flex-col items-center justify-center text-[#414755] px-4 py-2 hover:bg-gray-100 rounded-2xl transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-Cairo text-xs font-medium">الرئيسية</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#0070eb]/10 text-[#0058bc] rounded-2xl px-4 py-2 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-Cairo text-xs font-medium">الملاك</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#414755] px-4 py-2 hover:bg-gray-100 rounded-2xl transition-all" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-Cairo text-xs font-medium">المصاريف</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#414755] px-4 py-2 hover:bg-gray-100 rounded-2xl transition-all" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-Cairo text-xs font-medium">الأداءات</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#414755] px-4 py-2 hover:bg-gray-100 rounded-2xl transition-all" href="#">
+<span class="material-symbols-outlined">menu</span>
+<span class="font-Cairo text-xs font-medium">المزيد</span>
+</a>
+</div>
+</nav>
+</body></html>

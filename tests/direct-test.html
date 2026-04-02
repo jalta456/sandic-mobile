@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sandic Mobile - Direct Test</title>
+    <!-- Load App Theme & Structure -->
+    <link rel="stylesheet" href="../src/theme/tokens.css">
+    <link rel="stylesheet" href="../src/theme/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        #testConsole {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            width: 400px;
+            max-height: 500px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-y: auto;
+            z-index: 10000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            direction: ltr;
+            text-align: left;
+        }
+        #testConsole h3 {
+            color: #fff;
+            margin-top: 0;
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        #testConsole button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        #testConsole button:hover {
+            background: #0056b3;
+        }
+        .log-success { color: #4caf50; }
+        .log-error { color: #f44336; }
+        .log-warning { color: #ff9800; }
+        .log-info { color: #2196f3; }
+        #app {
+            margin-top: 520px;
+        }
+    </style>
+</head>
+<body>
+    <div id="testConsole">
+        <h3>Test Console</h3>
+        <button onclick="runTests()">Run All Tests</button>
+        <div id="consoleOutput"></div>
+    </div>
+
+    <div id="app">
+        <!-- Dashboard Screen -->
+        <section id="dashboard" class="view active">
+            <header style="padding: 2rem 0">
+                <p class="body-md">مرحباً بك، مدير المجمع</p>
+                <h1 class="headline-lg">لوحة التحكم</h1>
+            </header>
+            <div class="bento-grid">
+                <div class="card bento-hero">
+                    <p class="title-lg">الرصيد المتوفر</p>
+                    <h2 class="headline-lg" id="dashBalance">--</h2>
+                    <p class="body-md" style="color: rgba(255,255,255,0.7)">درهم مغربي</p>
+                </div>
+                <div class="card">
+                    <p class="body-md">الملاك</p>
+                    <p class="title-lg" id="dashOwners">--</p>
+                </div>
+                <div class="card">
+                    <p class="body-md">مصاريف الشهر</p>
+                    <p class="title-lg" id="dashExpenses">--</p>
+                </div>
+            </div>
+            <p class="title-lg" style="margin-bottom: 1rem">آخر العمليات</p>
+            <div id="recentActivity"></div>
+        </section>
+
+        <!-- Dynamic Content Sections -->
+        <section id="owners" class="view">
+            <h1 class="headline-lg">الملاك</h1>
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="ابحث عن مالك..." onkeyup="UIController.handleSearch('owners', this.value)">
+            </div>
+            <div id="ownersContent" role="list"></div>
+        </section>
+
+        <section id="expenses" class="view">
+            <h1 class="headline-lg">المصاريف</h1>
+            <div id="expensesContent" role="list"></div>
+        </section>
+
+        <section id="payments" class="view">
+            <h1 class="headline-lg">الأداءات</h1>
+            <div id="paymentsContent" role="list"></div>
+        </section>
+
+        <section id="more" class="view">
+            <h1 class="headline-lg">المزيد</h1>
+            <div class="bento-grid">
+                <button class="card text-center" onclick="UIController.navigateTo('fund')" aria-label="الصندوق">
+                    <i class="fas fa-vault mb-2" style="font-size: 1.5rem; color: var(--primary)"></i>
+                    <p class="body-md">الصندوق</p>
+                </button>
+                <button class="card text-center" onclick="UIController.navigateTo('projects')" aria-label="المشاريع">
+                    <i class="fas fa-tools mb-2" style="font-size: 1.5rem; color: var(--primary)"></i>
+                    <p class="body-md">المشاريع</p>
+                </button>
+                <button class="card text-center" onclick="UIController.navigateTo('announcements')" aria-label="الإعلانات">
+                    <i class="fas fa-bullhorn mb-2" style="font-size: 1.5rem; color: var(--primary)"></i>
+                    <p class="body-md">الإعلانات</p>
+                </button>
+                <button class="card text-center" onclick="UIController.navigateTo('receipts')" aria-label="الوصولات">
+                    <i class="fas fa-camera mb-2" style="font-size: 1.5rem; color: var(--primary)"></i>
+                    <p class="body-md">الوصولات</p>
+                </button>
+                <button class="card text-center" onclick="UIController.navigateTo('reports')" aria-label="التقارير">
+                    <i class="fas fa-chart-pie mb-2" style="font-size: 1.5rem; color: var(--primary)"></i>
+                    <p class="body-md">التقارير</p>
+                </button>
+            </div>
+        </section>
+
+        <!-- Sub-sections -->
+        <section id="fund" class="view">
+            <button onclick="UIController.navigateTo('more')" class="btn-back" aria-label="رجوع"><i class="fas fa-arrow-right"></i></button>
+            <h1 class="headline-lg">إدارة الصندوق</h1>
+            <div id="fundContent"></div>
+        </section>
+
+        <section id="projects" class="view">
+            <button onclick="UIController.navigateTo('more')" class="btn-back" aria-label="رجوع"><i class="fas fa-arrow-right"></i></button>
+            <h1 class="headline-lg">المشاريع</h1>
+            <div id="projectsContent"></div>
+        </section>
+
+        <section id="announcements" class="view">
+            <button onclick="UIController.navigateTo('more')" class="btn-back" aria-label="رجوع"><i class="fas fa-arrow-right"></i></button>
+            <h1 class="headline-lg">الإعلانات</h1>
+            <div id="announcementsContent"></div>
+        </section>
+
+        <section id="receipts" class="view">
+            <button onclick="UIController.navigateTo('more')" class="btn-back" aria-label="رجوع"><i class="fas fa-arrow-right"></i></button>
+            <h1 class="headline-lg">الوصولات</h1>
+            <div id="receiptsContent"></div>
+        </section>
+
+        <section id="reports" class="view">
+            <button onclick="UIController.navigateTo('dashboard')" class="btn-back" aria-label="رجوع"><i class="fas fa-arrow-right"></i></button>
+            <h1 class="headline-lg">التقارير المالية</h1>
+            <div id="reportsContent"></div>
+        </section>
+    </div>
+
+    <!-- Global UI -->
+    <button class="fab-squircle" aria-label="إضافة عملية جديدة"><i class="fas fa-plus"></i></button>
+
+    <nav class="bottom-nav-island">
+        <a href="javascript:void(0)" class="nav-item active" data-view="dashboard" onclick="UIController.navigateTo('dashboard')">
+            <i class="fas fa-home"></i>
+            <span>الرئيسية</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-item" data-view="owners" onclick="UIController.navigateTo('owners')">
+            <i class="fas fa-users"></i>
+            <span>الملاك</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-item" data-view="expenses" onclick="UIController.navigateTo('expenses')">
+            <i class="fas fa-money-bill-wave"></i>
+            <span>المصاريف</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-item" data-view="payments" onclick="UIController.navigateTo('payments')">
+            <i class="fas fa-calendar-check"></i>
+            <span>الأداءات</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-item" data-view="more" onclick="UIController.navigateTo('more')">
+            <i class="fas fa-th-large"></i>
+            <span>المزيد</span>
+        </a>
+    </nav>
+
+    <!-- Bottom Sheet / Modals -->
+    <div id="modalOverlay" class="modal-overlay" onclick="UIController.closeModal()">
+        <div class="bottom-sheet" onclick="event.stopPropagation()">
+            <div class="sheet-handle"></div>
+            <div id="modalContent">
+                <!-- Forms are injected dynamically via UIComponents -->
+            </div>
+        </div>
+    </div>
+
+    <!-- App Engine Imports -->
+    <script src="../src/data/mockData.js"></script>
+    <script src="../src/components/uiComponents.js"></script>
+    <script src="../src/utils/helpers.js"></script>
+    <script src="../src/screens/renderers.js"></script>
+    <script src="../script.js"></script>
+
+    <script>
+        // Test Functions
+        const TestRunner = {
+            log(message, type = 'info') {
+                const output = document.getElementById('consoleOutput');
+                const line = document.createElement('div');
+                line.className = `log-${type}`;
+                line.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+                output.appendChild(line);
+                output.scrollTop = output.scrollHeight;
+            },
+
+            async testEmptyPaymentForm() {
+                this.log('Starting Test 1: Empty Payment Form Validation', 'info');
+
+                // Navigate to Payments view
+                window.UIController.navigateTo('payments');
+                await this.delay(1000);
+
+                // Click FAB to open payment form
+                const fab = document.querySelector('.fab-squircle');
+                if (fab) {
+                    fab.click();
+                    await this.delay(500);
+
+                    // Try to submit empty form
+                    const submitButton = document.querySelector('button[onclick="UIController.handlePaymentSubmit()"]');
+                    if (submitButton) {
+                        submitButton.click();
+                        await this.delay(500);
+
+                        // Check for validation errors
+                        const errorInputs = document.querySelectorAll('.form-input.error');
+                        if (errorInputs.length > 0) {
+                            this.log('✓ Test 1 PASSED: Validation errors displayed correctly', 'success');
+                        } else {
+                            this.log('✗ Test 1 FAILED: No validation errors displayed', 'error');
+                        }
+                    } else {
+                        this.log('✗ Test 1 FAILED: Submit button not found', 'error');
+                    }
+                } else {
+                    this.log('✗ Test 1 FAILED: FAB button not found', 'error');
+                }
+            },
+
+            async testThisYearFilter() {
+                this.log('Starting Test 2: "This Year" Filter', 'info');
+
+                // Navigate to Reports view
+                window.UIController.navigateTo('reports');
+                await this.delay(1000);
+
+                // Click on "This Year" filter - find button by text content
+                const filterButtons = document.querySelectorAll('.segment-item');
+                let yearFilterButton = null;
+                filterButtons.forEach(btn => {
+                    if (btn.textContent.includes('هذه السنة')) {
+                        yearFilterButton = btn;
+                    }
+                });
+
+                if (yearFilterButton) {
+                    yearFilterButton.click();
+                    await this.delay(500);
+
+                    // Check if filter is active
+                    const isActive = yearFilterButton.classList.contains('active');
+                    if (isActive) {
+                        this.log('✓ Test 2 PASSED: "This Year" filter activated', 'success');
+                    } else {
+                        this.log('✗ Test 2 FAILED: Filter not activated', 'error');
+                    }
+                } else {
+                    this.log('✗ Test 2 FAILED: Year filter button not found', 'error');
+                }
+            },
+
+            async testFundVisualDifferentiation() {
+                this.log('Starting Test 3: Fund Visual Differentiation', 'info');
+
+                // Navigate to Fund view
+                window.UIController.navigateTo('fund');
+                await this.delay(1000);
+
+                // Check for deposit transactions (green color)
+                const deposits = document.querySelectorAll('.text-success');
+                // Check for withdrawal transactions (red color)
+                const withdrawals = document.querySelectorAll('.text-danger');
+
+                if (deposits.length > 0 && withdrawals.length > 0) {
+                    this.log('✓ Test 3 PASSED: Deposits and withdrawals are visually differentiated', 'success');
+                } else {
+                    this.log('⚠ Test 3 WARNING: Not enough transactions to test visual differentiation', 'warning');
+                }
+            },
+
+            async testViewCycling() {
+                this.log('Starting Test 4: View Cycling', 'info');
+
+                const views = [
+                    'dashboard',
+                    'owners',
+                    'expenses',
+                    'payments',
+                    'more',
+                    'fund',
+                    'projects',
+                    'announcements',
+                    'receipts',
+                    'reports'
+                ];
+
+                let errors = [];
+
+                for (const viewId of views) {
+                    window.UIController.navigateTo(viewId);
+                    await this.delay(500);
+
+                    const view = document.getElementById(viewId);
+                    if (!view || !view.classList.contains('active')) {
+                        errors.push(viewId);
+                    }
+                }
+
+                if (errors.length === 0) {
+                    this.log('✓ Test 4 PASSED: All views loaded successfully', 'success');
+                } else {
+                    this.log(`✗ Test 4 FAILED: Errors in views: ${errors.join(', ')}`, 'error');
+                }
+            },
+
+            delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            },
+
+            async runAllTests() {
+                const output = document.getElementById('consoleOutput');
+                output.innerHTML = '';
+                this.log('=== Starting Verification Tests ===', 'info');
+
+                try {
+                    await this.testEmptyPaymentForm();
+                    await this.delay(1000);
+
+                    await this.testThisYearFilter();
+                    await this.delay(1000);
+
+                    await this.testFundVisualDifferentiation();
+                    await this.delay(1000);
+
+                    await this.testViewCycling();
+                    await this.delay(1000);
+
+                    this.log('=== Verification Tests Complete ===', 'info');
+                } catch (error) {
+                    this.log(`Error running tests: ${error.message}`, 'error');
+                }
+            }
+        };
+
+        // Make TestRunner available globally
+        window.TestRunner = TestRunner;
+
+        // Initialize app
+        window.onload = () => {
+            window.UIController.init();
+            TestRunner.log('App initialized. Ready to run tests.', 'info');
+        };
+
+        function runTests() {
+            window.TestRunner.runAllTests();
+        }
+    </script>
+</body>
+</html>

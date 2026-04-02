@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ar"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>سنديك لوت يسرى - الأداءات</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-primary": "#adc6ff",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed-variant": "#004493",
+              "primary-fixed": "#d8e2ff",
+              "surface-bright": "#f8f9fa",
+              "surface-container": "#edeeef",
+              "on-secondary-container": "#2d4c83",
+              "on-secondary": "#ffffff",
+              "on-tertiary-fixed-variant": "#7c2e00",
+              "on-surface-variant": "#414755",
+              "error-container": "#ffdad6",
+              "inverse-surface": "#2e3132",
+              "on-surface": "#191c1d",
+              "surface-dim": "#d9dadb",
+              "on-secondary-fixed-variant": "#26467d",
+              "surface-container-highest": "#e1e3e4",
+              "surface-tint": "#005bc1",
+              "surface": "#f8f9fa",
+              "on-tertiary-fixed": "#351000",
+              "tertiary-fixed": "#ffdbcc",
+              "on-tertiary": "#ffffff",
+              "tertiary-fixed-dim": "#ffb595",
+              "secondary-fixed": "#d8e2ff",
+              "on-primary-fixed": "#001a41",
+              "on-primary": "#ffffff",
+              "on-error-container": "#93000a",
+              "on-tertiary-container": "#fffbff",
+              "on-secondary-fixed": "#001a41",
+              "secondary-container": "#a1befd",
+              "primary-fixed-dim": "#adc6ff",
+              "primary-container": "#0070eb",
+              "outline": "#717786",
+              "surface-container-low": "#f3f4f5",
+              "tertiary-container": "#c64f00",
+              "background": "#f8f9fa",
+              "on-primary-container": "#fefcff",
+              "tertiary": "#9e3d00",
+              "surface-container-high": "#e7e8e9",
+              "on-background": "#191c1d",
+              "surface-variant": "#e1e3e4",
+              "error": "#ba1a1a",
+              "secondary-fixed-dim": "#adc6ff",
+              "secondary": "#405e96",
+              "outline-variant": "#c1c6d7",
+              "inverse-on-surface": "#f0f1f2",
+              "primary": "#0058bc",
+              "on-error": "#ffffff"
+            },
+            fontFamily: {
+              "Cairo": ["Cairo", "sans-serif"],
+              "body": ["Inter", "sans-serif"],
+              "label": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Cairo', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="bg-surface-container-high fixed top-0 left-0 right-0 z-50 flex flex-row-reverse justify-between items-center w-full px-6 py-4 shadow-none">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-primary-fixed flex items-center justify-center">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="Professional headshot of a middle-aged man with a friendly expression, soft studio lighting, clean background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsA5qXUyiJeu9r0jIuXogkzXV50KICNmJv0d0gMIgqqOSbymGOca8ez8m3AMQdAUkImZKro_ls20hPJuH18PfqEjSioPUH45rQWV727vzd-ybcPtr2nfw6KYr0c6uL_W9LROGv3QV38hJP9KQXKzT0YIq7z7HCkZsJEYrJp9_hpWIk0gLQUQyjF3TKPIKMy8JCg0BiJIAyXsrp0rndy-3zm8sK66CZxTfjSiLXcmG_X510hp3TlCS1pXumuAzCZ9QQcIzLlxnrvjY"/>
+</div>
+<h1 class="text-[#0058bc] font-Cairo text-2xl font-bold text-right">سنديك لوت يسرى</h1>
+</div>
+<button class="text-[#414755] hover:bg-[#e7e8e9] transition-colors p-2 rounded-full active:scale-95">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+</button>
+</header>
+<main class="mt-24 px-6 max-w-5xl mx-auto">
+<!-- Month Selector & Summary Bento -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+<!-- Featured Month Picker -->
+<div class="md:col-span-2 bg-surface-container-lowest p-6 rounded-lg flex flex-col justify-between min-h-[180px]">
+<div class="flex justify-between items-center">
+<h2 class="text-on-surface-variant font-medium">عرض الأداءات لعام 2024</h2>
+<span class="material-symbols-outlined text-primary" data-icon="calendar_month">calendar_month</span>
+</div>
+<div class="flex gap-3 overflow-x-auto no-scrollbar py-4">
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full whitespace-nowrap text-sm font-bold shadow-lg shadow-primary/20">أكتوبر</button>
+<button class="bg-surface-container-high text-on-surface-variant px-6 py-2 rounded-full whitespace-nowrap text-sm font-medium hover:bg-surface-dim transition-colors">شتنبر</button>
+<button class="bg-surface-container-high text-on-surface-variant px-6 py-2 rounded-full whitespace-nowrap text-sm font-medium hover:bg-surface-dim transition-colors">غشت</button>
+<button class="bg-surface-container-high text-on-surface-variant px-6 py-2 rounded-full whitespace-nowrap text-sm font-medium hover:bg-surface-dim transition-colors">يوليوز</button>
+<button class="bg-surface-container-high text-on-surface-variant px-6 py-2 rounded-full whitespace-nowrap text-sm font-medium hover:bg-surface-dim transition-colors">يونيو</button>
+</div>
+<div class="flex items-center gap-2 text-primary font-bold">
+<span class="text-3xl tracking-tight">85%</span>
+<span class="text-sm font-Cairo">نسبة التحصيل لهذا الشهر</span>
+</div>
+</div>
+<!-- Quick Stats -->
+<div class="bg-primary-container text-on-primary-container p-6 rounded-lg flex flex-col justify-center items-center text-center">
+<span class="text-sm font-medium mb-2 opacity-80">المبلغ الإجمالي المحصل</span>
+<span class="text-4xl font-extrabold mb-1">12,450.00</span>
+<span class="text-xs uppercase font-bold tracking-widest">درهم مغربي</span>
+</div>
+</section>
+<!-- Search and Filter Row -->
+<div class="flex flex-col md:flex-row gap-4 mb-8 items-center">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg pr-12 py-4 text-on-surface focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-outline" placeholder="البحث عن شقة أو مالك..." type="text"/>
+</div>
+<div class="flex gap-2 w-full md:w-auto">
+<button class="flex-1 md:flex-none bg-surface-container-high px-6 py-4 rounded-lg flex items-center justify-center gap-2 hover:bg-surface-dim transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+<span class="text-sm font-bold">تصفية</span>
+</button>
+<button class="flex-1 md:flex-none bg-surface-container-high px-6 py-4 rounded-lg flex items-center justify-center gap-2 hover:bg-surface-dim transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+<span class="text-sm font-bold">تقرير</span>
+</button>
+</div>
+</div>
+<!-- Payment Status List -->
+<div class="space-y-4">
+<h3 class="text-on-surface-variant text-lg font-bold mb-4 pr-2">حالة الشقق (32)</h3>
+<!-- Payment Card: Paid -->
+<div class="bg-surface-container-lowest p-5 rounded-lg flex items-center justify-between group cursor-pointer hover:bg-surface-bright transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-xl">
+                        A4
+                    </div>
+<div>
+<h4 class="text-on-surface font-bold leading-tight">محمد التازي</h4>
+<p class="text-on-surface-variant text-xs">تاريخ الأداء: 12 أكتوبر 2024</p>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="text-left hidden md:block">
+<p class="text-on-surface font-bold">350.00 درهم</p>
+<p class="text-primary text-[10px] font-bold">عبر تحويل بنكي</p>
+</div>
+<div class="bg-emerald-100 text-emerald-700 px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        تم الأداء
+                    </div>
+</div>
+</div>
+<!-- Payment Card: Unpaid -->
+<div class="bg-surface-container-lowest p-5 rounded-lg flex items-center justify-between group cursor-pointer hover:bg-surface-bright transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center text-on-surface-variant font-bold text-xl">
+                        B2
+                    </div>
+<div>
+<h4 class="text-on-surface font-bold leading-tight">ليلى العمراني</h4>
+<p class="text-error text-xs font-medium">متأخر لمدة 5 أيام</p>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="text-left hidden md:block">
+<p class="text-on-surface font-bold">350.00 درهم</p>
+<p class="text-on-surface-variant text-[10px] font-bold">واجب شهري</p>
+</div>
+<div class="bg-error-container text-on-error-container px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="error" style="font-variation-settings: 'FILL' 1;">error</span>
+                        غير مؤدى
+                    </div>
+</div>
+</div>
+<!-- Payment Card: Paid (Cash) -->
+<div class="bg-surface-container-lowest p-5 rounded-lg flex items-center justify-between group cursor-pointer hover:bg-surface-bright transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-xl">
+                        C12
+                    </div>
+<div>
+<h4 class="text-on-surface font-bold leading-tight">ياسين بنجلون</h4>
+<p class="text-on-surface-variant text-xs">تاريخ الأداء: 05 أكتوبر 2024</p>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="text-left hidden md:block">
+<p class="text-on-surface font-bold">350.00 درهم</p>
+<p class="text-primary text-[10px] font-bold">نقداً (وصل 049)</p>
+</div>
+<div class="bg-emerald-100 text-emerald-700 px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        تم الأداء
+                    </div>
+</div>
+</div>
+<!-- Payment Card: Unpaid -->
+<div class="bg-surface-container-lowest p-5 rounded-lg flex items-center justify-between group cursor-pointer hover:bg-surface-bright transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center text-on-surface-variant font-bold text-xl">
+                        A7
+                    </div>
+<div>
+<h4 class="text-on-surface font-bold leading-tight">عمر الخياري</h4>
+<p class="text-on-surface-variant text-xs">بانتظار التأكيد</p>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="text-left hidden md:block">
+<p class="text-on-surface font-bold">350.00 درهم</p>
+<p class="text-on-surface-variant text-[10px] font-bold">واجب شهري</p>
+</div>
+<div class="bg-surface-container-high text-on-surface-variant px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="hourglass_empty">hourglass_empty</span>
+                        قيد المعالجة
+                    </div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button (FAB) -->
+<button class="fixed bottom-24 left-8 w-16 h-16 bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-lg shadow-2xl flex items-center justify-center group active:scale-95 transition-transform z-40">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex flex-row-reverse justify-around items-center px-4 pb-6 bg-white/80 backdrop-blur-xl shadow-2xl shadow-black/5">
+<a class="flex flex-col items-center justify-center text-[#414755] px-4 py-2 hover:bg-gray-100 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="dashboard">dashboard</span>
+<span class="font-Cairo text-xs font-medium">الرئيسية</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#414755] px-4 py-2 hover:bg-gray-100 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="group">group</span>
+<span class="font-Cairo text-xs font-medium">الملاك</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#414755] px-4 py-2 hover:bg-gray-100 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="payments">payments</span>
+<span class="font-Cairo text-xs font-medium">المصاريف</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#0070eb]/10 text-[#0058bc] rounded-2xl px-4 py-2 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="receipt_long" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<span class="font-Cairo text-xs font-medium">الأداءات</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#414755] px-4 py-2 hover:bg-gray-100 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="menu">menu</span>
+<span class="font-Cairo text-xs font-medium">المزيد</span>
+</a>
+</nav>
+<!-- Side View (Desktop Hint / Modal Logic Backdrop) -->
+<aside class="hidden lg:fixed lg:right-0 lg:top-24 lg:w-80 lg:h-[calc(100vh-6rem)] lg:flex flex-col bg-surface-container-low border-r border-outline-variant/10 p-6 overflow-y-auto ml-6">
+<div class="mb-8">
+<h3 class="text-lg font-bold mb-4">تفاصيل سريعة</h3>
+<div class="bg-surface-container-lowest p-4 rounded-lg mb-4">
+<div class="flex items-center gap-3 mb-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span class="text-sm font-medium">مؤدى: 24 شقة</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="text-sm font-medium">غير مؤدى: 8 شقق</span>
+</div>
+</div>
+</div>
+<div class="bg-primary/5 p-6 rounded-lg border border-primary/10">
+<span class="material-symbols-outlined text-primary mb-2" data-icon="info">info</span>
+<h4 class="text-primary font-bold mb-2">تذكير تلقائي</h4>
+<p class="text-xs text-on-surface-variant leading-relaxed">سيتم إرسال رسائل تذكير عبر واتساب لجميع الملاك المتأخرين غداً الساعة 10 صباحاً.</p>
+<button class="mt-4 w-full bg-primary text-on-primary py-2 rounded-lg text-sm font-bold">تعديل الإعدادات</button>
+</div>
+</aside>
+</body></html>

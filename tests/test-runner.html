@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sandic Mobile - Verification Tests Runner</title>
+
+    <!-- Load App Theme & Structure -->
+    <link rel="stylesheet" href="../src/theme/tokens.css">
+    <link rel="stylesheet" href="../src/theme/main.css">
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+            direction: rtl;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-section h2 {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .test-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        .test-item h3 {
+            margin: 0 0 10px 0;
+            color: #444;
+        }
+        .test-item p {
+            margin: 5px 0;
+            color: #666;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status.passed {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-family: 'Cairo', sans-serif;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .console-output {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        .manual-checklist {
+            list-style: none;
+            padding: 0;
+        }
+        .manual-checklist li {
+            padding: 10px;
+            margin-bottom: 5px;
+            background: #f9f9f9;
+            border-radius: 3px;
+        }
+        .manual-checklist li input[type="checkbox"] {
+            margin-left: 10px;
+        }
+        #appFrame {
+            width: 100%;
+            height: 600px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>خطة التحقق من تطبيق Sandic Mobile</h1>
+
+        <div class="test-section">
+            <h2>الاختبارات الآلية</h2>
+            <button onclick="runAutomatedTests()">تشغيل الاختبارات الآلية</button>
+
+            <div class="console-output" id="consoleOutput">
+                <p>جاري تحميل التطبيق...</p>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>التحقق اليدوي</h2>
+
+            <div class="test-item">
+                <h3>1. التحقق من رسائل WhatsApp</h3>
+                <ul class="manual-checklist">
+                    <li><input type="checkbox"> التحقق من رسالة التقرير الشهري</li>
+                    <li><input type="checkbox"> التحقق من رسالة تذكير الدفع</li>
+                    <li><input type="checkbox"> التحقق من التحقق من رقم الهاتف</li>
+                </ul>
+            </div>
+
+            <div class="test-item">
+                <h3>2. التحقق من النشاط الأخير في لوحة التحكم</h3>
+                <ul class="manual-checklist">
+                    <li><input type="checkbox"> إضافة دفع جديد والتحقق من ظهوره</li>
+                    <li><input type="checkbox"> إضافة مصروف جديد والتحقق من ظهوره</li>
+                    <li><input type="checkbox"> إضافة عملية صندوق والتحقق من ظهورها</li>
+                    <li><input type="checkbox"> إضافة إعلان جديد والتحقق من ظهوره</li>
+                </ul>
+            </div>
+
+            <div class="test-item">
+                <h3>3. التحقق من صحة النماذج</h3>
+                <ul class="manual-checklist">
+                    <li><input type="checkbox"> نموذج المالك - التحقق من الحقول المطلوبة</li>
+                    <li><input type="checkbox"> نموذج الدفع - التحقق من أن المبلغ > 0</li>
+                    <li><input type="checkbox"> نموذج المصروف - التحقق من أن المبلغ > 0</li>
+                    <li><input type="checkbox"> نموذج المشروع - التحقق من أن الميزانية > 0</li>
+                    <li><input type="checkbox"> نموذج الصندوق - التحقق من أن المبلغ > 0</li>
+                    <li><input type="checkbox"> نموذج الصندوق - التحقق من أن السحب ≤ الرصيد</li>
+                </ul>
+            </div>
+
+            <div class="test-item">
+                <h3>4. التحقق من البحث</h3>
+                <ul class="manual-checklist">
+                    <li><input type="checkbox"> البحث عن المالك بالاسم العربي</li>
+                    <li><input type="checkbox"> التحقق من عدم الحساسية لحالة الأحرف</li>
+                </ul>
+            </div>
+
+            <div class="test-item">
+                <h3>5. التحقق من التصميم المتجاوب</h3>
+                <ul class="manual-checklist">
+                    <li><input type="checkbox"> عرض على شاشة الجوال (375px)</li>
+                    <li><input type="checkbox"> عرض على شاشة التابلت (768px)</li>
+                    <li><input type="checkbox"> عرض على شاشة سطح المكتب (1024px)</li>
+                </ul>
+            </div>
+
+            <div class="test-item">
+                <h3>6. التحقق من إمكانية الوصول</h3>
+                <ul class="manual-checklist">
+                    <li><input type="checkbox"> التحقق من وجود aria-labels للأزرار</li>
+                    <li><input type="checkbox"> التحقق من عمل التنقل بلوحة المفاتيح</li>
+                    <li><input type="checkbox"> التحقق من تباين الألوان</li>
+                    <li><input type="checkbox"> التحقق من صحة التخطيط من اليمين لليسار</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>قائمة التحقق النهائية</h2>
+            <ul class="manual-checklist">
+                <li><input type="checkbox"> فتح التطبيق في المتصفح</li>
+                <li><input type="checkbox"> فتح وحدة تحكم المتصفح لمراقبة الأخطاء</li>
+                <li><input type="checkbox"> التحقق من التحميل الأولي الناجح</li>
+                <li><input type="checkbox"> تشغيل جميع الاختبارات الآلية</li>
+                <li><input type="checkbox"> إكمال جميع عمليات التحقق اليدوية</li>
+                <li><input type="checkbox"> توثيق أي مشاكل تم العثور عليها</li>
+                <li><input type="checkbox"> أخذ لقطات شاشة لأي أخطاء بصرية</li>
+                <li><input type="checkbox"> تسجيل أخطاء وحدة التحكم إذا وجدت</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h2>عرض التطبيق</h2>
+            <iframe id="appFrame" src="../index.html"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Load the test file
+        const script = document.createElement('script');
+        script.src = 'verification.test.js';
+        script.onload = function() {
+            console.log('Test file loaded successfully');
+        };
+        document.head.appendChild(script);
+
+        // Wait for iframe to load
+        const appFrame = document.getElementById('appFrame');
+        appFrame.onload = function() {
+            const consoleOutput = document.getElementById('consoleOutput');
+            consoleOutput.innerHTML = '<p>تم تحميل التطبيق بنجاح. جاهز لتشغيل الاختبارات.</p>';
+
+            // Access iframe's window and document
+            const iframeWindow = appFrame.contentWindow;
+            const iframeDocument = appFrame.contentDocument;
+
+            // Override console methods to capture iframe console
+            const originalLog = console.log;
+            const originalError = console.error;
+            const originalWarn = console.warn;
+
+            console.log = function(...args) {
+                originalLog.apply(console, args);
+                const line = document.createElement('div');
+                line.textContent = args.join(' ');
+                line.style.color = '#4caf50';
+                consoleOutput.appendChild(line);
+                consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            };
+
+            console.error = function(...args) {
+                originalError.apply(console, args);
+                const line = document.createElement('div');
+                line.textContent = 'ERROR: ' + args.join(' ');
+                line.style.color = '#f44336';
+                consoleOutput.appendChild(line);
+                consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            };
+
+            console.warn = function(...args) {
+                originalWarn.apply(console, args);
+                const line = document.createElement('div');
+                line.textContent = 'WARNING: ' + args.join(' ');
+                line.style.color = '#ff9800';
+                consoleOutput.appendChild(line);
+                consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            };
+
+            // Store iframe window for tests to use
+            window.appIframe = {
+                window: iframeWindow,
+                document: iframeDocument
+            };
+        };
+
+        function runAutomatedTests() {
+            const consoleOutput = document.getElementById('consoleOutput');
+            consoleOutput.innerHTML = '<p>جاري تشغيل الاختبارات...</p>';
+
+            if (!window.appIframe) {
+                console.error('التطبيق لم يتم تحميله بعد. يرجى الانتظار...');
+                return;
+            }
+
+            // Run tests in iframe context
+            const iframeWindow = window.appIframe.window;
+
+            // Inject test functions into iframe
+            iframeWindow.VerificationTests = window.VerificationTests;
+
+            // Run the tests
+            if (iframeWindow.VerificationTests) {
+                iframeWindow.VerificationTests.runAllTests();
+            } else {
+                console.error('Verification tests not loaded');
+            }
+        }
+    </script>
+</body>
+</html>
