@@ -1,7 +1,8 @@
 {
+    "id": "/sandic-mobile/",
     "name": "Sandic Mobile - إدارة المجمع",
     "short_name": "السانديك",
-    "description": "تطبيق إدارة مجمع سانديك السكني",
+    "description": "تطبيق إدارة مجمع سانديك السكني - تتبع الأداءات والمصاريف والصندوق",
     "start_url": ".",
     "scope": ".",
     "display": "standalone",
@@ -10,30 +11,43 @@
     "orientation": "portrait",
     "lang": "ar",
     "dir": "rtl",
+    "prefer_related_applications": false,
     "icons": [
         {
             "src": "icons/icon-192.png",
             "sizes": "192x192",
             "type": "image/png",
-            "purpose": "any maskable"
+            "purpose": "any"
+        },
+        {
+            "src": "icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
         },
         {
             "src": "icons/icon-512.png",
             "sizes": "512x512",
             "type": "image/png",
-            "purpose": "any maskable"
+            "purpose": "any"
+        },
+        {
+            "src": "icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
         }
     ],
     "categories": ["business", "finance"],
     "shortcuts": [
         {
             "name": "تسجيل أداء",
-            "url": "/#payments",
+            "url": "./#payments",
             "description": "تسجيل أداء جديد"
         },
         {
             "name": "قائمة الملاك",
-            "url": "/#owners",
+            "url": "./#owners",
             "description": "عرض قائمة الملاك"
         }
     ]
