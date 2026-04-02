@@ -480,6 +480,79 @@ window.ControleurUI = {
         Ecrans.rapports(periode);
     },
 
+    envoyerRapportWhatsApp(filtre = 'all') {
+        const moisArabes = ["يناير","فبراير","مارس","أبريل","ماي","يونيو","يوليوز","غشت","شتنبر","أكتوبر","نونبر","دجنبر"];
+        const anneeActuelle = new Date().getFullYear().toString();
+        const moisActuelIndex = new Date().getMonth();
+        const moisActuel = moisArabes[moisActuelIndex];
+
+        let paiementsFiltres = DonneesApp.paiements;
+        let depensesFiltrees = DonneesApp.depenses;
+        let titreFiltre = 'الكل';
+
+        if (filtre === 'month') {
+            paiementsFiltres = DonneesApp.paiements.filter(p => p.mois === moisActuel && p.annee === anneeActuelle);
+            depensesFiltrees = DonneesApp.depenses.filter(d => {
+                const dd = new Date(d.dateIso || d.date);
+                return dd.getMonth() === moisActuelIndex && dd.getFullYear().toString() === anneeActuelle;
+            });
+            titreFiltre = `${moisActuel} ${anneeActuelle}`;
+        } else if (filtre === 'year') {
+            paiementsFiltres = DonneesApp.paiements.filter(p => p.annee === anneeActuelle);
+            depensesFiltrees = DonneesApp.depenses.filter(d => {
+                const dd = new Date(d.dateIso || d.date);
+                return dd.getFullYear().toString() === anneeActuelle;
+            });
+            titreFiltre = `سنة ${anneeActuelle}`;
+        }
+
+        const totalMداخيل = paiementsFiltres.reduce((s, p) => s + (p.montant || 0), 0);
+        const totalمصاريف = depensesFiltrees.reduce((s, d) => s + (d.montant || 0), 0);
+        const صافي = totalMداخيل - totalمصاريف;
+        const solde = SelecteursDonnees.obtenirSolde();
+        const retards = SelecteursDonnees.obtenirDetailImpayes();
+        const nbProp = DonneesApp.proprietaires.length;
+
+        // الملاك المتأخرون
+        const متأخرون = DonneesApp.proprietaires.filter(o =>
+            !paiementsFiltres.some(p => p.idProprietaire === o.id)
+        );
+        const تاريخ = new Date().toLocaleDateString('ar-MA', { day:'numeric', month:'long', year:'numeric' });
+
+        let msg = `📊 *تقرير مجمع السانديك*\n`;
+        msg += `📅 ${titreFiltre} — ${تاريخ}\n`;
+        msg += `${'─'.repeat(30)}\n\n`;
+        msg += `💰 *الوضعية المالية*\n`;
+        msg += `• الرصيد الإجمالي: *${solde.toLocaleString()} DH*\n`;
+        msg += `• المداخيل: *+${totalMداخيل.toLocaleString()} DH*\n`;
+        msg += `• المصاريف: *-${totalمصاريف.toLocaleString()} DH*\n`;
+        msg += `• الصافي: *${صافي >= 0 ? '+' : ''}${صافي.toLocaleString()} DH*\n\n`;
+        msg += `👥 *الأداءات*\n`;
+        msg += `• عدد الملاك: ${nbProp}\n`;
+        msg += `• دفعوا: ${nbProp - متأخرون.length} ✅\n`;
+        msg += `• متأخرون: ${متأخرون.length} ⚠️\n`;
+        if (متأخرون.length > 0) {
+            msg += `\n⚠️ *الملاك المتأخرون:*\n`;
+            متأخرون.forEach(o => { msg += `  - ${o.nom} (شقة ${o.appartement})\n`; });
+        }
+        if (retards.montantTotal > 0) {
+            msg += `\n💸 إجمالي المتأخرات: *${retards.montantTotal.toLocaleString()} DH*\n`;
+        }
+        if (depensesFiltrees.length > 0) {
+            msg += `\n📂 *المصاريف الرئيسية:*\n`;
+            const catégories = {};
+            depensesFiltrees.forEach(d => {
+                catégories[d.categorie || 'أخرى'] = (catégories[d.categorie || 'أخرى'] || 0) + (d.montant || 0);
+            });
+            Object.entries(catégories).sort((a,b) => b[1]-a[1]).forEach(([cat, m]) => {
+                msg += `  • ${cat}: ${m.toLocaleString()} DH\n`;
+            });
+        }
+        msg += `\n_تقرير مجمع السانديك — نظام الإدارة الإلكترونية_ 🏢`;
+
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    },
+
     // ===== RECHERCHE =====
     gererRecherche(vueId, valeur) {
         const conteneur = document.getElementById(`${vueId}Content`);

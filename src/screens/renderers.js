@@ -153,44 +153,224 @@ window.Ecrans = {
     rapports(filtre = 'all') {
         const conteneur = document.getElementById('reportsContent');
         if (!conteneur) return;
-        const solde = SelecteursDonnees.obtenirSolde();
-        const totalCollectes = SelecteursDonnees.obtenirTotalCollectes(filtre);
-        const totalDepenses = SelecteursDonnees.obtenirTotalDepenses(filtre);
-        const donneesRetards = SelecteursDonnees.obtenirDetailImpayes();
+
+        const moisArabes = ["يناير","فبراير","مارس","أبريل","ماي","يونيو","يوليوز","غشت","شتنبر","أكتوبر","نونبر","دجنبر"];
+        const anneeActuelle = new Date().getFullYear().toString();
+        const moisActuelIndex = new Date().getMonth();
+
+        // ===== Calculs selon filtre =====
+        let paiementsFiltres = DonneesApp.paiements;
+        let depensesFiltrees = DonneesApp.depenses;
+        let titreFiltre = 'الكل';
+
+        if (filtre === 'month') {
+            const moisActuel = moisArabes[moisActuelIndex];
+            paiementsFiltres = DonneesApp.paiements.filter(p => p.mois === moisActuel && p.annee === anneeActuelle);
+            depensesFiltrees = DonneesApp.depenses.filter(d => {
+                const d2 = new Date(d.dateIso || d.date);
+                return d2.getMonth() === moisActuelIndex && d2.getFullYear().toString() === anneeActuelle;
+            });
+            titreFiltre = `${moisActuel} ${anneeActuelle}`;
+        } else if (filtre === 'year') {
+            paiementsFiltres = DonneesApp.paiements.filter(p => p.annee === anneeActuelle);
+            depensesFiltrees = DonneesApp.depenses.filter(d => {
+                const d2 = new Date(d.dateIso || d.date);
+                return d2.getFullYear().toString() === anneeActuelle;
+            });
+            titreFiltre = `سنة ${anneeActuelle}`;
+        }
+
+        const totalMداخيل = paiementsFiltres.reduce((s, p) => s + (p.montant || 0), 0);
+        const totalمصاريف = depensesFiltrees.reduce((s, d) => s + (d.montant || 0), 0);
+        const صافيRésultat = totalMداخيل - totalمصاريف;
+        const soldeTotal = SelecteursDonnees.obtenirSolde();
+
+        // ===== معدل التحصيل =====
+        const nbProprietaires = DonneesApp.proprietaires.length;
+        let nbPayesMois = 0;
+        if (filtre === 'month') {
+            const moisActuel = moisArabes[moisActuelIndex];
+            nbPayesMois = paiementsFiltres.map(p => p.idProprietaire).filter((v,i,a) => a.indexOf(v) === i).length;
+        } else if (filtre === 'year') {
+            nbPayesMois = DonneesApp.proprietaires.filter(o =>
+                DonneesApp.paiements.some(p => p.idProprietaire === o.id && p.annee === anneeActuelle)
+            ).length;
+        } else {
+            nbPayesMois = DonneesApp.proprietaires.filter(o =>
+                DonneesApp.paiements.some(p => p.idProprietaire === o.id)
+            ).length;
+        }
+        const tاuxCollecte = nbProprietaires > 0 ? Math.round((nbPayesMois / nbProprietaires) * 100) : 0;
+
+        // ===== بيانات المخطط الشهري (12 شهر) =====
+        const donnéesGraphe = moisArabes.slice(0, moisActuelIndex + 1).map((mois, i) => {
+            const entrees = DonneesApp.paiements
+                .filter(p => p.mois === mois && p.annee === anneeActuelle)
+                .reduce((s, p) => s + (p.montant || 0), 0);
+            const sorties = DonneesApp.depenses.filter(d => {
+                const dd = new Date(d.dateIso || d.date);
+                return dd.getMonth() === i && dd.getFullYear().toString() === anneeActuelle;
+            }).reduce((s, d) => s + (d.montant || 0), 0);
+            return { mois: mois.substring(0, 3), entrees, sorties };
+        });
+        const maxValeur = Math.max(...donnéesGraphe.map(d => Math.max(d.entrees, d.sorties)), 1);
+
+        // ===== تصنيف المصاريف =====
+        const catégories = {};
+        depensesFiltrees.forEach(d => {
+            const cat = d.categorie || 'أخرى';
+            catégories[cat] = (catégories[cat] || 0) + (d.montant || 0);
+        });
+        const catTriées = Object.entries(catégories).sort((a, b) => b[1] - a[1]);
+
+        // ===== حالة الملاك =====
+        const étatsProprietaires = DonneesApp.proprietaires.map(o => {
+            let nbPayé = 0;
+            if (filtre === 'month') {
+                const moisActuel = moisArabes[moisActuelIndex];
+                nbPayé = paiementsFiltres.filter(p => p.idProprietaire === o.id).length;
+            } else if (filtre === 'year') {
+                nbPayé = paiementsFiltres.filter(p => p.idProprietaire === o.id).length;
+            } else {
+                nbPayé = DonneesApp.paiements.filter(p => p.idProprietaire === o.id).length;
+            }
+            const montantPayé = paiementsFiltres.filter(p => p.idProprietaire === o.id).reduce((s,p) => s+(p.montant||0), 0);
+            return { ...o, nbPayé, montantPayé, payé: nbPayé > 0 };
+        }).sort((a, b) => a.payé - b.payé);
 
         conteneur.innerHTML = `
             ${ComposantsUI.controleFiltreSegmente(filtre)}
 
-            <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1rem">
-                ${ComposantsUI.carteRapport("الرصيد الصافي", `${solde.toLocaleString()} DH`, "الوضعية الإجمالية للصندوق", "fa-vault")}
-                ${ComposantsUI.carteRapport("المداخيل", `${totalCollectes.toLocaleString()} DH`, "الفترة المختارة", "fa-chart-line", "#2ecc71")}
-                ${ComposantsUI.carteRapport("المصاريف", `${totalDepenses.toLocaleString()} DH`, "الفترة المختارة", "fa-file-invoice-dollar", "#e74c3c")}
-            </div>
-
-            <div class="mb-4">
-                ${ComposantsUI.carteRetards(donneesRetards)}
-            </div>
-
-            <p class="title-lg mb-3" style="font-size:0.95rem">ملخص المشاريع</p>
-            ${DonneesApp.projets.map(p => `
-                <div class="card mb-3">
-                    <div style="display:flex;justify-content:space-between;align-items:center">
-                        <p class="title-lg" style="font-size:0.95rem">${p.titre}</p>
-                        <span class="badge ${p.progression >= 100 ? 'badge-paid' : 'badge-pending'}">${p.progression}%</span>
-                    </div>
-                    <div style="display:flex;justify-content:space-between;margin-top:0.5rem">
-                        <span class="body-md">الميزانية: ${(p.budget||0).toLocaleString()} DH</span>
-                        <span class="body-md" style="color:var(--primary)">المحصل: ${(p.collecte||0).toLocaleString()} DH</span>
-                    </div>
+            <!-- بطاقات ملخص -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1rem">
+                <div class="card" style="padding:1rem;text-align:center;grid-column:1/-1;background:linear-gradient(135deg,var(--primary),#1a4fcc)">
+                    <p style="color:rgba(255,255,255,0.8);font-size:0.8rem">الرصيد الإجمالي للصندوق</p>
+                    <p style="color:white;font-size:1.8rem;font-weight:800">${soldeTotal.toLocaleString()} DH</p>
                 </div>
-            `).join('')}
+                <div class="card" style="padding:0.85rem;text-align:center">
+                    <i class="fas fa-arrow-down" style="color:#2ecc71;font-size:1.2rem"></i>
+                    <p style="font-size:0.75rem;margin-top:0.25rem">المداخيل</p>
+                    <p style="color:#2ecc71;font-weight:700;font-size:1.1rem">+${totalMداخيل.toLocaleString()} DH</p>
+                    <p style="font-size:0.65rem;opacity:0.6">${titreFiltre}</p>
+                </div>
+                <div class="card" style="padding:0.85rem;text-align:center">
+                    <i class="fas fa-arrow-up" style="color:#e74c3c;font-size:1.2rem"></i>
+                    <p style="font-size:0.75rem;margin-top:0.25rem">المصاريف</p>
+                    <p style="color:#e74c3c;font-weight:700;font-size:1.1rem">-${totalمصاريف.toLocaleString()} DH</p>
+                    <p style="font-size:0.65rem;opacity:0.6">${titreFiltre}</p>
+                </div>
+                <div class="card" style="padding:0.85rem;text-align:center">
+                    <i class="fas fa-scale-balanced" style="color:${صافيRésultat >= 0 ? '#2ecc71' : '#e74c3c'};font-size:1.2rem"></i>
+                    <p style="font-size:0.75rem;margin-top:0.25rem">الصافي</p>
+                    <p style="color:${صافيRésultat >= 0 ? '#2ecc71' : '#e74c3c'};font-weight:700;font-size:1.1rem">${صافيRésultat >= 0 ? '+' : ''}${صافيRésultat.toLocaleString()} DH</p>
+                </div>
+                <div class="card" style="padding:0.85rem;text-align:center">
+                    <i class="fas fa-percent" style="color:var(--primary);font-size:1.2rem"></i>
+                    <p style="font-size:0.75rem;margin-top:0.25rem">معدل التحصيل</p>
+                    <p style="color:var(--primary);font-weight:700;font-size:1.1rem">${tاuxCollecte}%</p>
+                    <p style="font-size:0.65rem;opacity:0.6">${nbPayesMois} / ${nbProprietaires} مالك</p>
+                </div>
+            </div>
 
-            <div style="display:flex;gap:0.75rem;margin-top:1rem">
-                <button class="btn-primary" style="flex:1" onclick="window.ControleurUI.ouvrirWhatsApp('', 'monthly_report')">
+            <!-- المخطط الشهري -->
+            ${donnéesGraphe.length > 0 ? `
+            <div class="card" style="margin-bottom:1rem">
+                <p class="title-lg" style="font-size:0.9rem;margin-bottom:0.75rem">📊 المداخيل مقابل المصاريف ${anneeActuelle}</p>
+                <div style="display:flex;align-items:flex-end;gap:4px;height:80px;border-bottom:2px solid var(--outline-variant)">
+                    ${donnéesGraphe.map(d => `
+                        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+                            <div style="display:flex;gap:2px;align-items:flex-end;height:70px">
+                                <div style="width:8px;background:#2ecc71;border-radius:2px 2px 0 0;height:${Math.round((d.entrees/maxValeur)*68)+2}px;min-height:2px"></div>
+                                <div style="width:8px;background:#e74c3c;border-radius:2px 2px 0 0;height:${Math.round((d.sorties/maxValeur)*68)+2}px;min-height:2px"></div>
+                            </div>
+                            <p style="font-size:0.55rem;text-align:center">${d.mois}</p>
+                        </div>
+                    `).join('')}
+                </div>
+                <div style="display:flex;gap:1rem;margin-top:0.5rem;justify-content:center">
+                    <div style="display:flex;align-items:center;gap:0.25rem"><div style="width:10px;height:10px;background:#2ecc71;border-radius:2px"></div><p style="font-size:0.7rem">مداخيل</p></div>
+                    <div style="display:flex;align-items:center;gap:0.25rem"><div style="width:10px;height:10px;background:#e74c3c;border-radius:2px"></div><p style="font-size:0.7rem">مصاريف</p></div>
+                </div>
+            </div>` : ''}
+
+            <!-- المتأخرات -->
+            <div class="mb-3">
+                ${ComposantsUI.carteRetards(SelecteursDonnees.obtenirDetailImpayes())}
+            </div>
+
+            <!-- حالة الملاك -->
+            <div class="card" style="margin-bottom:1rem">
+                <p class="title-lg" style="font-size:0.9rem;margin-bottom:0.75rem">👥 وضعية الملاك — ${titreFiltre}</p>
+                ${étatsProprietaires.map(o => `
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid var(--outline-variant)">
+                        <div style="display:flex;align-items:center;gap:0.6rem">
+                            <div style="width:32px;height:32px;border-radius:50%;background:${o.payé ? '#2ecc7122' : '#e74c3c22'};color:${o.payé ? '#2ecc71' : '#e74c3c'};display:flex;align-items:center;justify-content:center;font-size:0.9rem">
+                                <i class="fas ${o.payé ? 'fa-check' : 'fa-times'}"></i>
+                            </div>
+                            <div>
+                                <p style="font-size:0.85rem;font-weight:600">${o.nom}</p>
+                                <p style="font-size:0.7rem;opacity:0.6">شقة ${o.appartement}</p>
+                            </div>
+                        </div>
+                        <div style="text-align:left">
+                            ${o.payé
+                                ? `<p style="color:#2ecc71;font-weight:700;font-size:0.85rem">+${o.montantPayé.toLocaleString()} DH</p>`
+                                : `<span class="badge badge-pending" style="font-size:0.65rem">متأخر</span>`
+                            }
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+
+            <!-- تصنيف المصاريف -->
+            ${catTriées.length > 0 ? `
+            <div class="card" style="margin-bottom:1rem">
+                <p class="title-lg" style="font-size:0.9rem;margin-bottom:0.75rem">📂 المصاريف حسب الفئة — ${titreFiltre}</p>
+                ${catTriées.map(([cat, montant]) => {
+                    const pct = totalمصاريف > 0 ? Math.round((montant / totalمصاريف) * 100) : 0;
+                    return `
+                    <div style="margin-bottom:0.75rem">
+                        <div style="display:flex;justify-content:space-between;margin-bottom:0.25rem">
+                            <p style="font-size:0.8rem;font-weight:600">${cat}</p>
+                            <p style="font-size:0.8rem;color:#e74c3c">${montant.toLocaleString()} DH (${pct}%)</p>
+                        </div>
+                        <div style="height:6px;background:var(--outline-variant);border-radius:3px">
+                            <div style="height:6px;background:#e74c3c;border-radius:3px;width:${pct}%;transition:width 0.5s"></div>
+                        </div>
+                    </div>`;
+                }).join('')}
+            </div>` : ''}
+
+            <!-- المشاريع -->
+            ${DonneesApp.projets.length > 0 ? `
+            <div class="card" style="margin-bottom:1rem">
+                <p class="title-lg" style="font-size:0.9rem;margin-bottom:0.75rem">🔧 المشاريع الجارية</p>
+                ${DonneesApp.projets.map(p => {
+                    const pct = Math.min(100, Math.round(((p.collecte||0) / (p.budget||1)) * 100));
+                    return `
+                    <div style="margin-bottom:0.75rem;padding-bottom:0.75rem;border-bottom:1px solid var(--outline-variant)">
+                        <div style="display:flex;justify-content:space-between">
+                            <p style="font-size:0.85rem;font-weight:600">${p.titre}</p>
+                            <span class="badge ${pct >= 100 ? 'badge-paid' : 'badge-pending'}">${pct}%</span>
+                        </div>
+                        <div style="height:6px;background:var(--outline-variant);border-radius:3px;margin:0.4rem 0">
+                            <div style="height:6px;background:var(--primary);border-radius:3px;width:${pct}%"></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between">
+                            <p style="font-size:0.7rem;opacity:0.7">الميزانية: ${(p.budget||0).toLocaleString()} DH</p>
+                            <p style="font-size:0.7rem;color:var(--primary)">المحصل: ${(p.collecte||0).toLocaleString()} DH</p>
+                        </div>
+                    </div>`;
+                }).join('')}
+            </div>` : ''}
+
+            <!-- أزرار التصدير -->
+            <div style="display:flex;gap:0.75rem;margin-top:0.5rem">
+                <button class="btn-primary" style="flex:1" onclick="window.ControleurUI.envoyerRapportWhatsApp('${filtre}')">
                     <i class="fab fa-whatsapp" style="margin-left:0.5rem"></i> تقرير WhatsApp
                 </button>
-                <button class="card" style="margin-bottom:0;padding:1rem;width:auto;cursor:pointer" onclick="alert('تصدير PDF قيد التطوير')">
-                    <i class="fas fa-file-pdf" style="color:#e74c3c"></i>
+                <button style="background:var(--surface-container);border:1px solid var(--outline);border-radius:12px;padding:1rem;cursor:pointer" onclick="window.print()">
+                    <i class="fas fa-print" style="color:var(--primary)"></i>
                 </button>
             </div>`;
     },
