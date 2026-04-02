@@ -553,6 +553,40 @@ window.ControleurUI = {
         window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     },
 
+    exporterPDF(filtre = 'all') {
+        const conteneur = document.getElementById('reportsContent');
+        if (!conteneur) { alert('لا يوجد تقرير لتصديره'); return; }
+
+        if (typeof html2pdf === 'undefined') {
+            // Fallback: utiliser window.print() avec style
+            const style = document.createElement('style');
+            style.textContent = '@media print { .app-nav, header, .segment-control { display:none !important; } body { background:white; } }';
+            document.head.appendChild(style);
+            window.print();
+            setTimeout(() => style.remove(), 1000);
+            return;
+        }
+
+        const titres = { all: 'الكل', month: 'الشهر الحالي', year: 'السنة الحالية' };
+        const opt = {
+            margin: 8,
+            filename: `تقرير-السانديك-${titres[filtre] || ''}-${new Date().toLocaleDateString('ar-MA')}.pdf`,
+            image: { type: 'jpeg', quality: 0.95 },
+            html2canvas: { scale: 2, useCORS: true, logging: false },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        const clone = conteneur.cloneNode(true);
+        clone.style.cssText = 'direction:rtl;font-family:Arial,sans-serif;padding:10px;background:white;color:#1a1a2e;max-width:800px';
+        // Supprimer les boutons du PDF
+        clone.querySelectorAll('button, .segment-control').forEach(el => el.remove());
+
+        this.afficherNotification('⏳ جارٍ توليد PDF...');
+        html2pdf().set(opt).from(clone).save().then(() => {
+            this.afficherNotification('✅ تم تصدير PDF بنجاح');
+        });
+    },
+
     // ===== RECHERCHE =====
     gererRecherche(vueId, valeur) {
         const conteneur = document.getElementById(`${vueId}Content`);
