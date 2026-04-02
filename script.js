@@ -608,6 +608,70 @@ window.ControleurUI = {
             <script>window.print();window.close();</script>
             </body></html>`);
         fenetre.document.close();
+    },
+
+    // ===== MODIFICATION PROPRIÉTAIRE =====
+    ouvrirModificationProprietaire(idProprietaire) {
+        const proprietaire = DonneesApp.proprietaires.find(p => p.id === idProprietaire);
+        if (!proprietaire) return;
+
+        const contenuModal = document.getElementById('modalContent');
+        if (!contenuModal) return;
+
+        contenuModal.innerHTML = ComposantsUI.formulaireModificationProprietaire(proprietaire);
+        document.getElementById('modalOverlay').classList.add('active');
+    },
+
+    gererModificationProprietaire() {
+        const id = Number(document.getElementById('idProprietaireModif')?.value);
+        const nom = this.obtenirValeurChamp('nomProprietaireModif');
+        const appartement = this.obtenirValeurChamp('appartProprietaireModif');
+        const telephone = this.obtenirValeurChamp('telProprietaireModif');
+        const type = this.obtenirValeurChamp('typeProprietaireModif');
+
+        if (!nom) { alert('يرجى إدخال اسم المالك'); return; }
+        if (!appartement) { alert('يرجى إدخال رقم الشقة'); return; }
+
+        // Vérifier doublon d'appartement (ignorer le propriétaire actuel)
+        const doublon = DonneesApp.proprietaires.find(p => p.appartement === appartement && p.id !== id);
+        if (doublon) { alert(`الشقة ${appartement} مسجلة باسم: ${doublon.nom}`); return; }
+
+        const index = DonneesApp.proprietaires.findIndex(p => p.id === id);
+        if (index === -1) { alert('لم يتم العثور على المالك'); return; }
+
+        DonneesApp.proprietaires[index] = {
+            ...DonneesApp.proprietaires[index],
+            nom, appartement, telephone, type
+        };
+
+        this.sauvegarderDonnees();
+        this.fermerModal();
+        // Rafraîchir le profil mis à jour
+        this.ouvrirProfilProprietaire(id);
+        this.afficherNotification('✅ تم تحديث معلومات المالك بنجاح');
+    },
+
+    supprimerProprietaire(idProprietaire, nomProprietaire) {
+        const confirmation = confirm(`هل تريد حذف "${nomProprietaire}" نهائياً؟\n\nسيتم حذف كل أداءاته أيضاً.`);
+        if (!confirmation) return;
+
+        // Supprimer le propriétaire
+        DonneesApp.proprietaires = DonneesApp.proprietaires.filter(p => p.id !== idProprietaire);
+        // Supprimer ses paiements
+        DonneesApp.paiements = DonneesApp.paiements.filter(p => p.idProprietaire !== idProprietaire);
+
+        this.sauvegarderDonnees();
+        this.fermerProfilProprietaire();
+        this.mettreAJourVue('owners');
+        this.afficherNotification('🗑️ تم حذف المالك بنجاح');
+    },
+
+    reinitialiserDonnees() {
+        const confirmation = confirm('⚠️ تحذير: سيتم مسح جميع البيانات والعودة للبيانات الأولية.\n\nهل أنت متأكد؟');
+        if (!confirmation) return;
+        localStorage.removeItem('sandic_data');
+        localStorage.removeItem('sandic_version');
+        window.location.reload();
     }
 };
 

@@ -219,7 +219,7 @@ window.ComposantsUI = {
                     <h2 class="headline-sm" style="margin-bottom:0.25rem">${proprietaire.nom}</h2>
                     <p class="body-md">شقة ${proprietaire.appartement} • ${proprietaire.type}</p>
                     <p class="body-md" style="margin-top:0.25rem;direction:ltr">${proprietaire.telephone || 'لا يوجد هاتف'}</p>
-                    <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem">
+                    <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;flex-wrap:wrap">
                         <button onclick="ControleurUI.ouvrirWhatsApp('${proprietaire.telephone}', 'payment_reminder')"
                                 style="background:#25D366;color:white;border:none;border-radius:10px;padding:0.6rem 1.2rem;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;gap:0.5rem">
                             <i class="fab fa-whatsapp"></i> إرسال تذكير
@@ -227,6 +227,14 @@ window.ComposantsUI = {
                         <button onclick="ControleurUI.ouvrirModalParVuePourProprietaire(${proprietaire.id})"
                                 style="background:var(--primary);color:white;border:none;border-radius:10px;padding:0.6rem 1.2rem;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;gap:0.5rem">
                             <i class="fas fa-plus"></i> تسجيل أداء
+                        </button>
+                        <button onclick="ControleurUI.ouvrirModificationProprietaire(${proprietaire.id})"
+                                style="background:var(--surface-container);color:var(--on-surface);border:1px solid var(--outline);border-radius:10px;padding:0.6rem 1.2rem;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;gap:0.5rem">
+                            <i class="fas fa-edit"></i> تعديل
+                        </button>
+                        <button onclick="ControleurUI.supprimerProprietaire(${proprietaire.id}, '${proprietaire.nom}')"
+                                style="background:#e74c3c22;color:#e74c3c;border:1px solid #e74c3c44;border-radius:10px;padding:0.6rem 1.2rem;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;gap:0.5rem">
+                            <i class="fas fa-trash"></i> حذف
                         </button>
                     </div>
                 </div>
@@ -311,6 +319,35 @@ window.ComposantsUI = {
                     </select>
                 </div>
                 <button class="btn-primary w-full" onclick="ControleurUI.gererSoumissionProprietaire()">تأكيد الإضافة</button>
+            </div>`;
+    },
+
+    formulaireModificationProprietaire(proprietaire) {
+        return `
+            <div class="p-4">
+                <h2 class="headline-sm mb-4">تعديل معلومات المالك</h2>
+                <input type="hidden" id="idProprietaireModif" value="${proprietaire.id}">
+                <div class="form-group mb-3">
+                    <label>الاسم الكامل <span style="color:#e74c3c">*</span></label>
+                    <input type="text" id="nomProprietaireModif" class="form-input" value="${proprietaire.nom}">
+                </div>
+                <div class="form-group mb-3">
+                    <label>رقم الهاتف</label>
+                    <input type="tel" id="telProprietaireModif" class="form-input" value="${proprietaire.telephone || ''}">
+                </div>
+                <div class="form-group mb-3">
+                    <label>رقم الشقة <span style="color:#e74c3c">*</span></label>
+                    <input type="text" id="appartProprietaireModif" class="form-input" value="${proprietaire.appartement}">
+                </div>
+                <div class="form-group mb-4">
+                    <label>النوع</label>
+                    <select id="typeProprietaireModif" class="form-input">
+                        <option value="مالك مقيم" ${proprietaire.type === 'مالك مقيم' ? 'selected' : ''}>مالك مقيم</option>
+                        <option value="مالك" ${proprietaire.type === 'مالك' ? 'selected' : ''}>مالك (غير مقيم)</option>
+                        <option value="مكتري" ${proprietaire.type === 'مكتري' ? 'selected' : ''}>مكتري</option>
+                    </select>
+                </div>
+                <button class="btn-primary w-full" onclick="ControleurUI.gererModificationProprietaire()">💾 حفظ التعديلات</button>
             </div>`;
     },
 
