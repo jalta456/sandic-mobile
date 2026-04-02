@@ -639,21 +639,44 @@ window.ControleurUI = {
 
         const titres = { all: 'الكل', month: 'الشهر الحالي', year: 'السنة الحالية' };
         const opt = {
-            margin: 8,
+            margin: [15, 10, 15, 10], // top, left, bottom, right
             filename: `تقرير-السانديك-${titres[filtre] || ''}-${new Date().toLocaleDateString('ar-MA')}.pdf`,
-            image: { type: 'jpeg', quality: 0.95 },
-            html2canvas: { scale: 2, useCORS: true, logging: false },
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true, windowWidth: 800, backgroundColor: '#ffffff' },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
 
-        const clone = conteneur.cloneNode(true);
-        clone.style.cssText = 'direction:rtl;font-family:Arial,sans-serif;padding:10px;background:white;color:#1a1a2e;max-width:800px';
-        // Supprimer les boutons du PDF
-        clone.querySelectorAll('button, .segment-control').forEach(el => el.remove());
+        // On masque temporairement les boutons pour le PDF
+        const boutons = conteneur.querySelectorAll('button, .segment-control');
+        const anciensDisplays = [];
+        boutons.forEach((btn, i) => {
+            anciensDisplays[i] = btn.style.display;
+            btn.style.display = 'none';
+        });
 
-        this.afficherNotification('⏳ جارٍ توليد PDF...');
-        html2pdf().set(opt).from(clone).save().then(() => {
-            this.afficherNotification('✅ تم تصدير PDF بنجاح');
+        // Ajouter un en-tête pour le PDF
+        const headerPdf = document.createElement('div');
+        headerPdf.id = 'temp-pdf-header';
+        headerPdf.innerHTML = `
+            <div style="text-align:center; padding-bottom: 20px; border-bottom: 2px solid #eaedf2; margin-bottom: 20px;">
+                <h1 style="color:#1a4fcc; display:inline-flex; align-items:center; gap:10px;"><i class="fas fa-building"></i> تقرير السانديك المالي</h1>
+                <p style="color:#64748b; margin-top:5px; font-weight:600;">الفترة المحددة: ${titres[filtre] || ''} — ${new Date().toLocaleDateString('ar-MA')}</p>
+            </div>
+        `;
+        conteneur.insertBefore(headerPdf, conteneur.firstChild);
+
+        this.afficherNotification('⏳ جارٍ توليد التقرير في ملف PDF...');
+
+        html2pdf().set(opt).from(conteneur).save().then(() => {
+            // Nettoyage et restauration
+            const tempHeader = document.getElementById('temp-pdf-header');
+            if (tempHeader) tempHeader.remove();
+            
+            boutons.forEach((btn, i) => {
+                btn.style.display = anciensDisplays[i];
+            });
+
+            this.afficherNotification('✅ تم تحميل تقرير PDF بنجاح');
         });
     },
 
