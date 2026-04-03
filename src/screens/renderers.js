@@ -334,7 +334,15 @@ window.Ecrans = {
                     const pct = totSorties>0 ? Math.round((mon/totSorties)*100) : 0;
                     const couleurs = {'صيانة':'#e67e22','كهرباء':'#f1c40f','تنظيف':'#3498db','حراسة':'#9b59b6','ماء':'#1abc9c','أخرى':'#95a5a6'};
                     const clr = couleurs[cat]||'#e74c3c';
-                    return `<div style="margin-bottom:0.7rem">
+                    
+                    const detailsStr = depFilt.filter(d=>(d.categorie||'أخرى')===cat).map(d=>`
+                        <div style="display:flex;justify-content:space-between;padding:0.3rem 0;border-bottom:1px dashed var(--outline-variant);font-size:0.75rem;opacity:0.85">
+                            <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70%">▹ ${d.description||'بدون تفصيل'} <span style="opacity:0.5;font-size:0.65rem;margin-right:4px">${d.date}</span></span>
+                            <span style="font-weight:600">${(d.montant||0).toLocaleString()} DH</span>
+                        </div>
+                    `).join('');
+
+                    return `<div style="margin-bottom:1.2rem">
                         <div style="display:flex;justify-content:space-between;margin-bottom:0.3rem">
                             <div style="display:flex;align-items:center;gap:0.4rem">
                                 <div style="width:10px;height:10px;border-radius:50%;background:${clr}"></div>
@@ -342,8 +350,11 @@ window.Ecrans = {
                             </div>
                             <span style="font-size:0.8rem;color:${clr};font-weight:700">${mon.toLocaleString()} DH <span style="opacity:0.6">(${pct}%)</span></span>
                         </div>
-                        <div style="height:7px;background:var(--outline-variant);border-radius:4px;overflow:hidden">
+                        <div style="height:7px;background:var(--outline-variant);border-radius:4px;overflow:hidden;margin-bottom:0.4rem">
                             <div style="height:7px;background:${clr};border-radius:4px;width:${pct}%"></div>
+                        </div>
+                        <div style="padding-right:0.6rem">
+                            ${detailsStr}
                         </div>
                     </div>`;
                 }).join('')}
