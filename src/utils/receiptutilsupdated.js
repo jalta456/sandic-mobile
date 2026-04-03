@@ -108,15 +108,22 @@ window.UtilitairesRecus = {
 
         const htmlRecu = this.genererHTMLRecu(paiement);
         const element = document.createElement('div');
+        element.style.width = '420px'; // Forcer une largeur mobile standard
+        element.style.position = 'absolute';
+        element.style.left = '-9999px';
         element.innerHTML = htmlRecu;
         document.body.appendChild(element);
 
+        // Calcul dynamique de la hauteur du reçu
+        const width = 420;
+        const height = element.offsetHeight + 20;
+
         const options = {
-            margin: 10,
+            margin: 0,
             filename: `recu_${paiement.id}.pdf`,
             image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2 },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            html2canvas: { scale: 2, useCORS: true, windowWidth: width, backgroundColor: '#ffffff' },
+            jsPDF: { unit: 'px', format: [width, height], orientation: 'portrait' }
         };
 
         html2pdf().set(options).from(element).save().then(() => {
