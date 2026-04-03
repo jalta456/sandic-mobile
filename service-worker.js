@@ -3,7 +3,7 @@
  * PWA Service Worker - يجعل التطبيق يعمل بدون إنترنت
  */
 
-const CACHE_NAME = 'sandic-v2.0';
+const CACHE_NAME = 'sandic-v2.1'; // Mise à jour pour forcer le rafraîchissement des scripts du rapport et de la génération PDF.
 const FICHIERS_A_CACHER = [
     '/',
     '/index.html',
